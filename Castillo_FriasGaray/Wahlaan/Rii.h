@@ -38,6 +38,14 @@ struct vertice {
     Vertice * vecinos;
 };
 
+void init_vertice(Vertice vertice, u32 nombre);
+
+void destruir_vertice(Vertice vertice);
+
+void agregar_vecino(Vertice A, Vertice B);
+
+void optimizar_memoria(Vertice A);
+
 
 /* Estructura de datos para Grafo y operaciones*/
 
