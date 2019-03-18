@@ -59,5 +59,7 @@ struct GrafoSt {
 
 };
 
+typedef struct GrafoSt * Grafo;
+
 
 #endif
