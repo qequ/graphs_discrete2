@@ -16,6 +16,7 @@ Grafo ConstruccionDelGrafo() {
     Grafo grafo;
     u32 cant_vertices, cant_lados;
     char check_edge[4];
+    char c;
 
     // Saltando los comentarios
     while ((c = getchar()) == 'c') {
@@ -92,18 +93,18 @@ Grafo ConstruccionDelGrafo() {
     // Nombre de los vértices que conforman el lado
     for (u32 i = 0; i < grafo->cant_lados; i++) {
         if (scanf("%*s") != 0) {
-            DestruccionDelGrafo(G);
+            DestruccionDelGrafo(grafo);
             printf("Error de lectura en %u\n", i+1);
             return NULL;
         }
 
         if (scanf("%u", &vert_a) != 1) {
-            DestruccionDelGrafo(G);
+            DestruccionDelGrafo(grafo);
             printf("Error de lectura en %u\n", i+1);
             return NULL;
         }
         if (scanf("%u", &vert_b) != 1) {
-            DestruccionDelGrafo(G);
+            DestruccionDelGrafo(grafo);
             printf("Error de lectura en %u\n", i+1);
             return NULL;
         }
