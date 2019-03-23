@@ -18,7 +18,7 @@
 typedef uint32_t u32;
 
 
-/* Estructura de datos para Vértice y operaciones*/
+/* Estructura de datos para Vértice y operaciones */
 
 typedef struct vertice vertice_t;
 
@@ -47,7 +47,7 @@ void agregar_vecino(Vertice A, Vertice B);
 void optimizar_memoria(Vertice A);
 
 
-/* Estructura de datos para Grafo y operaciones*/
+/* Estructura de datos para Grafo y operaciones */
 
 struct GrafoSt {
     u32 cant_vertices;
@@ -63,5 +63,16 @@ typedef struct GrafoSt grafo_t;
 
 typedef struct GrafoSt * Grafo;
 
+/* Funciones útiles para hashtable */
+
+u32 pot(u32 x, u32 y);
+
+u32 obtener_primo_para_hash(u32 cant_vertices);
+
+u32 hash_1(Grafo graf, u32 nombre_vert);
+
+u32 hash_2(u32 nombre_vert, u32 primo);
+
+u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert, u32 primo_hash);
 
 #endif

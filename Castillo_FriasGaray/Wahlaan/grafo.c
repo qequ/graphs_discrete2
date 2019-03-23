@@ -1,68 +1,6 @@
 #include "Rii.h"
 
 
-u32 pot(u32 x, u32 y) {
-    u32 res = 1;
-
-    while (y > 0) {
-        if (y & 1)
-            res = res * x;
-
-        y = y >> 1;
-        x = x * x;
-    }
-    return res;
-}
-
-
-u32 obtener_primo_para_hash(u32 cant_vertices) {
-    // conjunto de primos útil para hash.
-    // valores de primos obtenidos de;
-    // https://planetmath.org/goodhashtableprimes
-    u32 primos[31] = {
-        2,
-        3,
-        5,
-        7,
-        23,
-        53,
-        97,
-        193,
-        389,
-        769,
-        1543,
-        3079,
-        6151,
-        12289,
-        24593,
-        49157,
-        98317,
-        196613,
-        393241,
-        786433,
-        1572869,
-        3145739,
-        6291469,
-        12582917,
-        25165843,
-        50331653,
-        100663319,
-        201326611,
-        402653189,
-        805306457,
-        1610612741
-    };
-
-    for (u32 i = 1; i < 30; i++) {
-        if (cant_vertices >= pot(2, i) && cant_vertices <= pot(2, i+1)) {
-            return primos[i-1];
-        }
-    }
-    return primos[30];
-}
-
-
-
 void DestruccionDelGrafo(Grafo G) {
     for (u32 i = 0; i < G->cant_vertices; i++) {
         free(G->hash_table_vertices[i]);
