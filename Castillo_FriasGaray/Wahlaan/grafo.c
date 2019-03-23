@@ -1,14 +1,46 @@
 #include "Rii.h"
 
 
-void DestruccionDelGrafo(Grafo G) {
-    for (u32 i = 0; i < G->cant_vertices; i++) {
-        free(G->hash_table_vertices[i]);
+void DestruccionDelGrafo(Grafo graf) {
+    for (u32 i = 0; i < graf->cant_vertices; i++) {
+        // Si está inicializado hay que utilizar la función destruir_vertice
+        // ya que init_vertice usa un malloc para el array de vecinos
+        if (graf->hash_table_vertices[i]->inicializado) {
+            destruir_vertice(graf->hash_table_vertices[i]);
+        }
+        else {
+        free(graf->hash_table_vertices[i]);
+        }
     }
-    free(G->hash_table_vertices);
-    free(G->orden_actual);
-    free(G);
+    free(graf->hash_table_vertices);
+    free(graf->orden_actual);
+    free(graf);
     printf("Liberada toda la memoria\n");
+}
+
+
+void agregar_lado(Grafo graf, u32 nombre_vert_a, u32 nombre_vert_b, u32 primo_hash) {
+    // Buscando las posiciones de los vértices en la hash table
+    u32 posicion_vert_a = obtener_posicion_vertice(graf, nombre_vert_a, primo_hash);
+    u32 posicion_vert_b = obtener_posicion_vertice(graf, nombre_vert_b, primo_hash);
+
+    // Recuperando los vértices
+    Vertice vert_a = graf->hash_table_vertices[posicion_vert_a];
+    Vertice vert_b = graf->hash_table_vertices[posicion_vert_b];
+
+    // agregar vértices como vecinos entre si(dado que es grafo no dirigido)
+    agregar_vecino(vert_a, vert_b);
+    agregar_vecino(vert_b, vert_a);
+}
+
+
+bool hay_vertices_no_inicializados(Grafo graf) {
+    for (u32 i = 0; i < graf->cant_vertices; i++) {
+        if (!graf->hash_table_vertices[i]->inicializado) {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -89,8 +121,13 @@ Grafo ConstruccionDelGrafo() {
 
     // Una vez que terminó de allocar las estructuras empieza a tomar lados
 
-    u32 vert_a, vert_b;
     // Nombre de los vértices que conforman el lado
+    u32 nombre_vert_a, nombre_vert_b;
+
+    // Calcular el primo para la hash_table(se hace acá para no tener que
+    // calcularlo cada vez que buscamos un lado)
+    u32 primo_hash = obtener_primo_para_hash(grafo->cant_vertices);
+
     for (u32 i = 0; i < grafo->cant_lados; i++) {
         if (scanf("%*s") != 0) {
             DestruccionDelGrafo(grafo);
@@ -98,22 +135,27 @@ Grafo ConstruccionDelGrafo() {
             return NULL;
         }
 
-        if (scanf("%u", &vert_a) != 1) {
+        if (scanf("%u", &nombre_vert_a) != 1) {
             DestruccionDelGrafo(grafo);
             printf("Error de lectura en %u\n", i+1);
             return NULL;
         }
-        if (scanf("%u", &vert_b) != 1) {
+        if (scanf("%u", &nombre_vert_b) != 1) {
             DestruccionDelGrafo(grafo);
             printf("Error de lectura en %u\n", i+1);
             return NULL;
         }
 
-        // obtener posicion vert_a()
-        // obtener posicion vert_b()
-        // poner a vert_a como vecino de vert_b
-        // poner a vert_b como vecino de vert_a
+        agregar_lado(grafo, nombre_vert_a, nombre_vert_b, primo_hash);
     }
+
+    // chequeando que el total de vértices extraido es n
+    if (hay_vertices_no_inicializados(grafo)) {
+        printf("cantidad de vertices leidos no es la declarada\n");
+        return NULL;
+    }
+
+
 
     // copiar hash table a dirección de orden
 
