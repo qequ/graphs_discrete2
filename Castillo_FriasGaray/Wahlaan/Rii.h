@@ -59,6 +59,8 @@ struct GrafoSt {
 
 };
 
+typedef struct GrafoSt grafo_t;
+
 typedef struct GrafoSt * Grafo;
 
 
