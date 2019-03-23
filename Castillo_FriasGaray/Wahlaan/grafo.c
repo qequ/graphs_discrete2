@@ -165,10 +165,15 @@ Grafo ConstruccionDelGrafo() {
     // liberando espacio sin usar(si quedó) de array de vecinos de cada vértice
     optimizar_hash_table(grafo);
 
-    // copiar hash table a dirección de orden
+    // Copiando punteros de hash_table a array de orden
+    // memcpy(grafo->orden, grafo->hashTable, grafo->cantVertices * sizeof(Vertice));
+    if (memcpy(grafo->orden_actual, grafo->hash_table_vertices, grafo->cantVertices * sizeof(Vertice)) == NULL) {
+        printf("fallo al copiar hash table\n");
+        return NULL;
+    }
 
-    // correr greedy
 
+    // Correr greedy
 
-
+    return grafo;
 }
