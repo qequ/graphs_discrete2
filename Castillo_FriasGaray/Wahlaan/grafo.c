@@ -167,7 +167,7 @@ Grafo ConstruccionDelGrafo() {
 
     // Copiando punteros de hash_table a array de orden
     // memcpy(grafo->orden, grafo->hashTable, grafo->cantVertices * sizeof(Vertice));
-    if (memcpy(grafo->orden_actual, grafo->hash_table_vertices, grafo->cantVertices * sizeof(Vertice)) == NULL) {
+    if (memcpy(grafo->orden_actual, grafo->hash_table_vertices, grafo->cant_vertices * sizeof(Vertice)) == NULL) {
         printf("fallo al copiar hash table\n");
         return NULL;
     }
