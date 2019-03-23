@@ -44,6 +44,13 @@ bool hay_vertices_no_inicializados(Grafo graf) {
 }
 
 
+void optimizar_hash_table(Grafo graf) {
+    for (u32 i = 0; i < graf->cant_vertices; i++) {
+        optimizar_memoria(graf->hash_table_vertices[i]);
+    }
+}
+
+
 Grafo ConstruccionDelGrafo() {
     Grafo grafo;
     u32 cant_vertices, cant_lados;
@@ -155,7 +162,8 @@ Grafo ConstruccionDelGrafo() {
         return NULL;
     }
 
-
+    // liberando espacio sin usar(si quedó) de array de vecinos de cada vértice
+    optimizar_hash_table(grafo);
 
     // copiar hash table a dirección de orden
 
