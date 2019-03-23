@@ -17,19 +17,18 @@ Grafo ConstruccionDelGrafo() {
     u32 cant_vertices, cant_lados;
     char check_edge[4];
 
-    // saltando los comentarios
+    // Saltando los comentarios
     while ((c = getchar()) == 'c') {
         while ((c = getchar()) != '\n') {
             ;
         }
     }
 
+    // Chequeando la línea "p edge x y"
     if (c != 'p') {
         printf("error en primera linea sin comentario\n");
         return NULL;
     }
-
-    //if (scanf("%*s") != 0) return NULL;
     if (scanf("%s", check_edge) != 1) return NULL;
     if (strcmp(check_edge, "edge") != 0) {
         printf("error en primera linea sin comentario\n");
@@ -39,29 +38,31 @@ Grafo ConstruccionDelGrafo() {
     if (scanf("%u", &cant_vertices) != 1) return NULL;
     if (scanf("%u", &cant_lados) != 1) return NULL;
 
-    // allocando estructuras
+    // Allocando grafo
     grafo = malloc(sizeof(grafo_t));
-    // si falla allocando memoria
+    // Si falla allocando memoria
     if (grafo == NULL) return NULL;
 
     grafo->cant_vertices = cant_vertices;
     grafo->cant_lados = cant_lados;
-
     grafo->hash_table_vertices = (Vertice *)calloc(cant_vertices, sizeof(Vertice));
+
     if (grafo->hash_table_vertices == NULL) {
         printf("fallo al allocar memoria\n");
         free(grafo);
         return NULL;
     }
+
+    // Añadiendo vértices sin inicializar a la hash table
     for (u32 i = 0; i < grafo->cant_vertices; i++) {
         grafo->hash_table_vertices[i] = (Vertice)malloc(sizeof(vertice_t));
 
-        // liberar toda la memoria ocupada
+        // Liberar toda la memoria ocupada si falla al allocar
         if ((grafo->hash_table_vertices[i]) == NULL) {
             printf("fallo al allocar memoria\n");
 
             for (u32 j = 0; j < i; j++) {
-                // liberar cada struct de vertice hasta el momento
+                // Liberar cada struct de vertice hasta el momento
                 free(grafo->hash_table_vertices[j]);
             }
             free(grafo->hash_table_vertices);
@@ -76,7 +77,7 @@ Grafo ConstruccionDelGrafo() {
     grafo->orden_actual = (Vertice *)malloc(grafo->cant_vertices * sizeof(Vertice));
 
     if (grafo->orden_actual == NULL) {
-        // liberando toda la memoria
+        // Liberando toda la memoria
         for (u32 i = 0; i < grafo->cant_vertices; i++) {
             free(grafo->hash_table_vertices[i]);
         }
@@ -85,10 +86,10 @@ Grafo ConstruccionDelGrafo() {
         return NULL;
     }
 
-    // una vez que terminó de allocar las estructuras empieza a tomar lados
+    // Una vez que terminó de allocar las estructuras empieza a tomar lados
 
     u32 vert_a, vert_b;
-    // nombre de los vértices que conforman el lado
+    // Nombre de los vértices que conforman el lado
     for (u32 i = 0; i < grafo->cant_lados; i++) {
         if (scanf("%*s") != 0) {
             DestruccionDelGrafo(G);
