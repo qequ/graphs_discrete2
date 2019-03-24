@@ -29,6 +29,7 @@ typedef vertice_t * Vertice;
 struct vertice {
     // info del vértice
     bool inicializado;
+    bool coloreado;
     u32 nombre;
     u32 color_actual;
 
@@ -73,6 +74,8 @@ void DestruccionDelGrafo(Grafo G);
 
 Grafo CopiarGrafo(Grafo G);
 
+void dumpear_hash_table(Grafo g);
+
 // Funciones para extraer información de los grafos
 
 u32 NumeroDeVertices(Grafo G);
@@ -93,5 +96,11 @@ u32 hash_1(Grafo graf, u32 nombre_vert);
 u32 hash_2(u32 nombre_vert, u32 primo);
 
 u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
+
+
+/* Algoritmos principales */
+
+u32 Greedy(Grafo G);
+
 
 #endif

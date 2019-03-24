@@ -6,8 +6,9 @@
 void init_vertice(Vertice vertice, u32 nombre) {
     vertice->inicializado = true;
     vertice->nombre = nombre;
-    // este color es solo temporal, cuando termine ConstrucciónDelGrafo
-    // el mismo será distinto
+
+    // a pesar de que color_actual sea 0, no está coloreado
+    vertice->coloreado = false;
     vertice->color_actual = 0;
     vertice->tam_array_vecinos = 1;
 

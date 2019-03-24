@@ -184,7 +184,8 @@ Grafo ConstruccionDelGrafo() {
     }
 
 
-    // Correr greedy
+    u32 coloreo = Greedy(grafo);
+    printf("Coloreo con %u colores\n", coloreo);
 
     return grafo;
 }
