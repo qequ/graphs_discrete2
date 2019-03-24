@@ -19,10 +19,10 @@ void DestruccionDelGrafo(Grafo graf) {
 }
 
 
-void agregar_lado(Grafo graf, u32 nombre_vert_a, u32 nombre_vert_b, u32 primo_hash) {
+void agregar_lado(Grafo graf, u32 nombre_vert_a, u32 nombre_vert_b) {
     // Buscando las posiciones de los vértices en la hash table
-    u32 posicion_vert_a = obtener_posicion_vertice(graf, nombre_vert_a, primo_hash);
-    u32 posicion_vert_b = obtener_posicion_vertice(graf, nombre_vert_b, primo_hash);
+    u32 posicion_vert_a = obtener_posicion_vertice(graf, nombre_vert_a);
+    u32 posicion_vert_b = obtener_posicion_vertice(graf, nombre_vert_b);
 
     // Recuperando los vértices
     Vertice vert_a = graf->hash_table_vertices[posicion_vert_a];
@@ -49,6 +49,16 @@ void optimizar_hash_table(Grafo graf) {
         optimizar_memoria(graf->hash_table_vertices[i]);
     }
 }
+
+void dumpear_hash_table(Grafo g) {
+    for (u32 i = 0; i < g->cant_vertices; i++) {
+        printf("en posicion %u del hash table:\n", i);
+        printf("nombre vertice: %u\n", g->hash_table_vertices[i]->nombre);
+        printf("Vecinos:\n");
+        imprimirVecinos(g->hash_table_vertices[i]);
+    }
+}
+
 
 
 Grafo ConstruccionDelGrafo() {
@@ -133,7 +143,7 @@ Grafo ConstruccionDelGrafo() {
 
     // Calcular el primo para la hash_table(se hace acá para no tener que
     // calcularlo cada vez que buscamos un lado)
-    u32 primo_hash = obtener_primo_para_hash(grafo->cant_vertices);
+    //u32 primo_hash = obtener_primo_para_hash(grafo->cant_vertices);
 
     for (u32 i = 0; i < grafo->cant_lados; i++) {
         if (scanf("%*s") != 0) {
@@ -153,8 +163,9 @@ Grafo ConstruccionDelGrafo() {
             return NULL;
         }
 
-        agregar_lado(grafo, nombre_vert_a, nombre_vert_b, primo_hash);
+        agregar_lado(grafo, nombre_vert_a, nombre_vert_b);
     }
+
 
     // chequeando que el total de vértices extraido es n
     if (hay_vertices_no_inicializados(grafo)) {
