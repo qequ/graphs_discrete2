@@ -75,7 +75,7 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert) {
         // quiere decir que el vértice con nombre_vert todavía no estaba
         // en la hash table; se lo inicializa.
         if (!graf->hash_table_vertices[indice]->inicializado) {
-            
+
             Vertice vert = graf->hash_table_vertices[indice];
             init_vertice(vert, nombre_vert);
             return indice;
@@ -112,4 +112,3 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert) {
     return indice;
 
 }
-
