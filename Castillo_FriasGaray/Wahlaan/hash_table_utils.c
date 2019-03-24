@@ -74,8 +74,9 @@ u32 hash_2(u32 nombre_vert, u32 primo) {
 
 
 // Función para encontrar el índice de un vértice en la hash table.
-u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert, u32 primo_hash) {
+u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert) {
     // calculando las funciones de hash
+    /*
     u32 h1 = hash_1(graf, nombre_vert);
     u32 h2 = hash_2(nombre_vert, primo_hash);
     u32 i = 0;
@@ -102,5 +103,25 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert, u32 primo_hash) {
         // inicializado y no es el vértice que buscamos
         i++;
     }
+    */
+
+    // testeando con linear probing
+    u32 busquedas = 0;
+    u32 indice = hash_1(graf, nombre_vert);
+
+    while(busquedas < graf->cant_vertices) {
+        if (!graf->hash_table_vertices[indice]->inicializado) {
+            Vertice vertice = graf->hash_table_vertices[indice];
+            init_vertice(vertice, nombre_vert);
+            return indice;
+        }
+        else if(graf->hash_table_vertices[indice]->nombre == nombre_vert) {
+            return indice;
+        }
+        else indice = (hash_1(graf, nombre_vert) + busquedas) % graf->cant_vertices;
+        busquedas++;
+    }
+
+    return indice;
 }
 

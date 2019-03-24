@@ -47,6 +47,8 @@ void agregar_vecino(Vertice A, Vertice B);
 
 void optimizar_memoria(Vertice A);
 
+void imprimirVecinos(Vertice vertice);
+
 
 /* Estructura de datos para Grafo y operaciones */
 
@@ -74,6 +76,6 @@ u32 hash_1(Grafo graf, u32 nombre_vert);
 
 u32 hash_2(u32 nombre_vert, u32 primo);
 
-u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert, u32 primo_hash);
+u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
 #endif
