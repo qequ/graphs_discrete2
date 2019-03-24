@@ -72,6 +72,14 @@ void DestruccionDelGrafo(Grafo G);
 
 Grafo CopiarGrafo(Grafo G);
 
+// Funciones para extraer información de los grafos
+
+u32 NumeroDeVertices(Grafo G);
+
+u32 NumeroDeLados(Grafo G);
+
+u32 NumeroDeColores(Grafo G);
+
 
 /* Funciones útiles para hashtable */
 

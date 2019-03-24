@@ -197,3 +197,18 @@ Grafo CopiarGrafo(Grafo G) {
 
     return grafo;
 }
+
+
+u32 NumeroDeVertices(Grafo G) {
+    return (G->cant_vertices);
+}
+
+
+u32 NumeroDeLados(Grafo G) {
+    return (G->cant_lados);
+}
+
+
+u32 NumeroDeColores(Grafo G) {
+    return (G->coloreo_actual);
+}
