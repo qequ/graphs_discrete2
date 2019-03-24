@@ -66,6 +66,13 @@ typedef struct GrafoSt grafo_t;
 
 typedef struct GrafoSt * Grafo;
 
+Grafo ConstruccionDelGrafo();
+
+void DestruccionDelGrafo(Grafo G);
+
+Grafo CopiarGrafo(Grafo G);
+
+
 /* Funciones útiles para hashtable */
 
 u32 pot(u32 x, u32 y);

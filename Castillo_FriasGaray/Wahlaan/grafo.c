@@ -1,20 +1,20 @@
 #include "Rii.h"
 
 
-void DestruccionDelGrafo(Grafo graf) {
-    for (u32 i = 0; i < graf->cant_vertices; i++) {
+void DestruccionDelGrafo(Grafo G) {
+    for (u32 i = 0; i < G->cant_vertices; i++) {
         // Si está inicializado hay que utilizar la función destruir_vertice
         // ya que init_vertice usa un malloc para el array de vecinos
-        if (graf->hash_table_vertices[i]->inicializado) {
-            destruir_vertice(graf->hash_table_vertices[i]);
+        if (G->hash_table_vertices[i]->inicializado) {
+            destruir_vertice(G->hash_table_vertices[i]);
         }
         else {
-        free(graf->hash_table_vertices[i]);
+        free(G->hash_table_vertices[i]);
         }
     }
-    free(graf->hash_table_vertices);
-    free(graf->orden_actual);
-    free(graf);
+    free(G->hash_table_vertices);
+    free(G->orden_actual);
+    free(G);
     printf("Liberada toda la memoria\n");
 }
 
@@ -185,6 +185,15 @@ Grafo ConstruccionDelGrafo() {
 
 
     // Correr greedy
+
+    return grafo;
+}
+
+
+Grafo CopiarGrafo(Grafo G) {
+
+    Grafo grafo = malloc(sizeof(grafo_t));
+    memcpy(grafo, G, sizeof(grafo_t));
 
     return grafo;
 }
