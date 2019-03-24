@@ -1,7 +1,7 @@
 /*
     Integrantes
 
-    Castillo Luciano - email:
+    Castillo Luciano - email: lucianocastillo22@gmail.com
 
     Frias Garay Alvaro - email:
 
@@ -14,11 +14,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
+#include <math.h>
 
 typedef uint32_t u32;
 
 
-/* Estructura de datos para Vértice y operaciones*/
+/* Estructura de datos para Vértice y operaciones */
 
 typedef struct vertice vertice_t;
 
@@ -46,8 +48,10 @@ void agregar_vecino(Vertice A, Vertice B);
 
 void optimizar_memoria(Vertice A);
 
+void imprimirVecinos(Vertice vertice);
 
-/* Estructura de datos para Grafo y operaciones*/
+
+/* Estructura de datos para Grafo y operaciones */
 
 struct GrafoSt {
     u32 cant_vertices;
@@ -59,7 +63,35 @@ struct GrafoSt {
 
 };
 
+typedef struct GrafoSt grafo_t;
+
 typedef struct GrafoSt * Grafo;
 
+Grafo ConstruccionDelGrafo();
+
+void DestruccionDelGrafo(Grafo G);
+
+Grafo CopiarGrafo(Grafo G);
+
+// Funciones para extraer información de los grafos
+
+u32 NumeroDeVertices(Grafo G);
+
+u32 NumeroDeLados(Grafo G);
+
+u32 NumeroDeColores(Grafo G);
+
+// Funciones para extraer información de los vértices
+
+
+/* Funciones útiles para hashtable */
+
+u32 obtener_primo_para_hash(u32 cant_vertices);
+
+u32 hash_1(Grafo graf, u32 nombre_vert);
+
+u32 hash_2(u32 nombre_vert, u32 primo);
+
+u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
 #endif

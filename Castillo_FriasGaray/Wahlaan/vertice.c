@@ -54,37 +54,3 @@ void imprimirVecinos(Vertice vertice) {
         printf("%u ", vertice->vecinos[i]->nombre);
     printf("\n");
 }
-
-
-int main() {
-    // testing Vertice TAD  y sus operaciones
-    Vertice v_A = (Vertice)malloc(sizeof(vertice_t));
-    Vertice v_B = (Vertice)malloc(sizeof(vertice_t));
-    Vertice v_C = (Vertice)malloc(sizeof(vertice_t));
-
-    init_vertice(v_A, 232);
-    init_vertice(v_B, 11);
-    init_vertice(v_C, 33);
-
-    agregar_vecino(v_A, v_B);
-    agregar_vecino(v_A, v_C);
-
-    agregar_vecino(v_B, v_A);
-    agregar_vecino(v_C, v_B);
-
-
-    imprimirVecinos(v_A);
-    imprimirVecinos(v_B);
-    imprimirVecinos(v_C);
-
-    optimizar_memoria(v_A);
-
-    destruir_vertice(v_A);
-    destruir_vertice(v_B);
-    destruir_vertice(v_C);
-
-    // corriendo con valgrind, no tienen memory leaks las funciones
-
-    return 0;
-}
-
