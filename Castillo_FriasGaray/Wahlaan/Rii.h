@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 typedef uint32_t u32;
 
@@ -80,10 +81,10 @@ u32 NumeroDeLados(Grafo G);
 
 u32 NumeroDeColores(Grafo G);
 
+// Funciones para extraer información de los vértices
+
 
 /* Funciones útiles para hashtable */
-
-u32 pot(u32 x, u32 y);
 
 u32 obtener_primo_para_hash(u32 cant_vertices);
 

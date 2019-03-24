@@ -212,3 +212,43 @@ u32 NumeroDeLados(Grafo G) {
 u32 NumeroDeColores(Grafo G) {
     return (G->coloreo_actual);
 }
+
+
+u32 NombreDelVertice(Grafo G, u32 i) {
+    return (G->orden_actual[i]->nombre);
+}
+
+u32 ColorDelVertice(Grafo G, u32 i) {
+    if (i >= G->cant_vertices) {
+        return (pow(2, 32) - 1);
+    }
+
+    return (G->orden_actual[i]->color_actual);
+}
+
+
+u32 GradoDelVertice(Grafo G, u32 i) {
+    if (i >= G->cant_vertices) {
+        return (pow(2, 32) - 1);
+    }
+
+    return (G->orden_actual[i]->cant_vecinos);
+}
+
+
+u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
+    if (i >= G->cant_vertices) {
+        return (pow(2, 32) - 1);
+    }
+
+    if (j >= GradoDelVertice(G, i)) {
+        return (pow(2, 32) - 1);
+    }
+
+    return (G->orden_actual[i]->vecinos[j]->color_actual);
+}
+
+
+u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j) {
+    return (G->orden_actual[i]->vecinos[j]->nombre);
+}
