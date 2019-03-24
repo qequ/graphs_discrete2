@@ -1,19 +1,5 @@
 #include "Rii.h"
 
-// Función para calcular la potencia x^y
-u32 pot(u32 x, u32 y) {
-    u32 res = 1;
-
-    while (y > 0) {
-        if (y & 1)
-            res = res * x;
-
-        y = y >> 1;
-        x = x * x;
-    }
-    return res;
-}
-
 
 // Función para obtener un primo para el hash_2 de acuerdo a la cantidad
 // de vértices que tiene el grafo
@@ -56,7 +42,7 @@ u32 obtener_primo_para_hash(u32 cant_vertices) {
     };
 
     for (u32 i = 1; i < 30; i++) {
-        if (cant_vertices >= pot(2, i) && cant_vertices <= pot(2, i+1)) {
+        if (cant_vertices >= pow(2, i) && cant_vertices <= pow(2, i+1)) {
             return primos[i-1];
         }
     }
@@ -105,6 +91,7 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert) {
     }
     */
 
+
     // testeando con linear probing
     u32 busquedas = 0;
     u32 indice = hash_1(graf, nombre_vert);
@@ -123,5 +110,6 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert) {
     }
 
     return indice;
+
 }
 
