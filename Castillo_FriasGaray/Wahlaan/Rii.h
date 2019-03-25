@@ -86,6 +86,15 @@ u32 NumeroDeColores(Grafo G);
 
 // Funciones para extraer información de los vértices
 
+u32 NombreDelVertice(Grafo G, u32 i);
+
+u32 ColorDelVertice(Grafo G, u32 i);
+
+u32 GradoDelVertice(Grafo G, u32 i);
+
+u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j);
+
+u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j);
 
 /* Funciones útiles para hashtable */
 
