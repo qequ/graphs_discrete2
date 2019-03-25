@@ -164,6 +164,7 @@ Grafo ConstruccionDelGrafo() {
         }
 
         agregar_lado(grafo, nombre_vert_a, nombre_vert_b);
+        printf("lado %u %u agregado\n", nombre_vert_a, nombre_vert_b);
     }
 
 
