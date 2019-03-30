@@ -12,6 +12,7 @@ void decolorear(Grafo G) {
         G->hash_table_vertices[i]->coloreado = false;
         G->hash_table_vertices[i]->color_actual = 0;
     }
+    G->coloreo_actual = 0;
 }
 
 void colorear(Vertice V, u32 color) {

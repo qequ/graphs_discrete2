@@ -57,7 +57,7 @@ void imprimirVecinos(Vertice vertice);
 struct GrafoSt {
     u32 cant_vertices;
     u32 cant_lados;
-    u32 coloreo_actual; // numero máximo de coloreo actual
+    u32 coloreo_actual; // cantidad de colores del coloreo actual
 
     Vertice * hash_table_vertices; // útil para cargar lados
     Vertice * orden_actual; // orden actual de vértices
