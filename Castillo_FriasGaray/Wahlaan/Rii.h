@@ -134,6 +134,7 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
 char OrdenNatural(Grafo G);
 
+char OrdenWelshPowell(Grafo G);
 
 /* Algoritmos principales */
 
