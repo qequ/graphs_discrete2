@@ -68,19 +68,78 @@ u32 Greedy(Grafo G) {
 }
 
 
-int main() {
-    Grafo g = ConstruccionDelGrafo();
-    //dumpear_hash_table(g);
-    u32 coloreo;
+int Bipartito(Grafo G) {
+    decolorear(G);
 
-    coloreo = Greedy(g);
+    // Variables útiles para el coloreo
+    Cola q;
+    Vertice x, p, vecino;
+    // Comenzamos suponiendo que es bipartito
+    G->coloreo_actual = 2;
 
-    if (coloreo > g->cant_vertices + 1) {
-        printf("Esto no debería pasar\n");
+    for (u32 j = 0; j < G->cant_vertices; j++) {
+        x = G->orden_actual[j];
+
+        // Si el vértice ya está coloreado no nos importa
+        if (x->coloreado) {
+            continue;
+        }
+
+        // Los colores van a ser 0 y 1
+        colorear(x, 0);
+        // Cola útil para BFS
+        q = crear_cola(G->cant_vertices);
+        encolar(q, x);
+
+        while (!cola_vacia(q)) {
+            // Obteniendo el primero de la cola
+            p = decolar(q);
+
+            // Recorriendo los vecinos del vértice decolado
+            for (u32 i = 0; i < p->cant_vecinos; i++) {
+                vecino = p->vecinos[i];
+
+                if (!vecino->coloreado) {
+                    encolar(q, vecino);
+
+                    // Coloreamos al vecino con el color opuesto a p
+                    if (p->color_actual == 0) {
+                        colorear(vecino, 1);
+                    }
+                    else {
+                        colorear(vecino, 0);
+                    }
+                }
+                else if (vecino->color_actual == p->color_actual) {
+                    // El vértice p y su vecino tienen el mismo color
+                    // i.e. el grafo no es bipartito
+                    destruir_cola(q);
+                    // Colorea al grafo con el orden actual
+                    Greedy(G);
+                    return 0;
+                }
+            }
+        }
+        // Termina con una componente conexa, destruimos la cola
+        destruir_cola(q);
     }
-    else printf("coloreo razonable\n");
+    // Si llegó acá significa que el grafo fue coloreado con 2 colores
+    // i.e. es bipartito
+    return 1;
+}
 
-    printf("cant vertices: %u\n",g->cant_vertices );
+
+int main() {
+    Grafo G = ConstruccionDelGrafo();
+
+    int bip = Bipartito(G);
+    if (bip == 1) {
+        printf("Es bipartito\n");
+    }
+    else {
+        printf("No es bipartito\n");
+    }
+
 
     return 0;
 }
