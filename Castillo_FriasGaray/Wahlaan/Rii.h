@@ -135,5 +135,6 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
 u32 Greedy(Grafo G);
 
+int Bipartito(Grafo G);
 
 #endif
