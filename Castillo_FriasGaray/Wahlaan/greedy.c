@@ -149,12 +149,25 @@ int main() {
             printf("mal ordenado\n");
         }
     }
+
     printf("all right\n");
 
     u32 coloreo_orden_nat = Greedy(G);
     printf("Cantidad de colores en orden natural: %u\n", coloreo_orden_nat);
 
+    OrdenWelshPowell(G);
 
+    printf("Orden WelshPowell\n");
+    for (u32 i = 0; i < G->cant_vertices - 1; i++) {
+        if (G->orden_actual[i]->cant_vecinos < G->orden_actual[i+1]->cant_vecinos) {
+            printf("mal ordenado\n");
+        }
+    }
+    printf("all right wp\n");
+
+    u32 coloreo_wp = Greedy(G);
+
+    printf("Cantidad de colores en WelshPowell: %u\n", coloreo_wp);
 
     return 0;
 }
