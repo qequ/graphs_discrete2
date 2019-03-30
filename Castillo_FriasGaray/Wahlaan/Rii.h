@@ -76,6 +76,30 @@ Grafo CopiarGrafo(Grafo G);
 
 void dumpear_hash_table(Grafo g);
 
+/* Estructura de Cola y operaciones. Útil para Bipartito */
+
+struct ColaSt{
+    Vertice *elems;
+    u32 first;
+    u32 size;
+    u32 n;
+};
+
+typedef struct ColaSt cola_t;
+
+typedef struct ColaSt * Cola;
+
+Cola crear_cola(u32 n);
+
+void encolar(Cola q, Vertice elem);
+
+Vertice decolar(Cola q);
+
+u32 cola_vacia(Cola q);
+
+void destruir_cola(Cola q);
+
+
 // Funciones para extraer información de los grafos
 
 u32 NumeroDeVertices(Grafo G);
@@ -111,5 +135,6 @@ u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
 u32 Greedy(Grafo G);
 
+int Bipartito(Grafo G);
 
 #endif
