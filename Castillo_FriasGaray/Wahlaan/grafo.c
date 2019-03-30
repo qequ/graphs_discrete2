@@ -164,6 +164,7 @@ Grafo ConstruccionDelGrafo() {
         }
 
         agregar_lado(grafo, nombre_vert_a, nombre_vert_b);
+        printf("lado %u %u agregado\n", nombre_vert_a, nombre_vert_b);
     }
 
 
@@ -184,7 +185,8 @@ Grafo ConstruccionDelGrafo() {
     }
 
 
-    // Correr greedy
+    u32 coloreo = Greedy(grafo);
+    printf("Coloreo con %u colores\n", coloreo);
 
     return grafo;
 }

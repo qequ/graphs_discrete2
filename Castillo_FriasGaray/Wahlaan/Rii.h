@@ -29,6 +29,7 @@ typedef vertice_t * Vertice;
 struct vertice {
     // info del vértice
     bool inicializado;
+    bool coloreado;
     u32 nombre;
     u32 color_actual;
 
@@ -56,7 +57,7 @@ void imprimirVecinos(Vertice vertice);
 struct GrafoSt {
     u32 cant_vertices;
     u32 cant_lados;
-    u32 coloreo_actual; // numero máximo de coloreo actual
+    u32 coloreo_actual; // cantidad de colores del coloreo actual
 
     Vertice * hash_table_vertices; // útil para cargar lados
     Vertice * orden_actual; // orden actual de vértices
@@ -73,6 +74,8 @@ void DestruccionDelGrafo(Grafo G);
 
 Grafo CopiarGrafo(Grafo G);
 
+void dumpear_hash_table(Grafo g);
+
 // Funciones para extraer información de los grafos
 
 u32 NumeroDeVertices(Grafo G);
@@ -83,6 +86,15 @@ u32 NumeroDeColores(Grafo G);
 
 // Funciones para extraer información de los vértices
 
+u32 NombreDelVertice(Grafo G, u32 i);
+
+u32 ColorDelVertice(Grafo G, u32 i);
+
+u32 GradoDelVertice(Grafo G, u32 i);
+
+u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j);
+
+u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j);
 
 /* Funciones útiles para hashtable */
 
@@ -93,5 +105,11 @@ u32 hash_1(Grafo graf, u32 nombre_vert);
 u32 hash_2(u32 nombre_vert, u32 primo);
 
 u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
+
+
+/* Algoritmos principales */
+
+u32 Greedy(Grafo G);
+
 
 #endif
