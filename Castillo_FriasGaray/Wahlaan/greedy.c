@@ -132,6 +132,7 @@ int Bipartito(Grafo G) {
 int main() {
     Grafo G = ConstruccionDelGrafo();
 
+/*
     int bip = Bipartito(G);
     if (bip == 1) {
         printf("Es bipartito\n");
@@ -139,6 +140,20 @@ int main() {
     else {
         printf("No es bipartito\n");
     }
+*/
+
+    OrdenNatural(G);
+    printf("Orden natural según nombre\n");
+    for (u32 i = 0; i < G->cant_vertices - 1; i++) {
+        if (G->orden_actual[i]->nombre > G->orden_actual[i+1]->nombre) {
+            printf("mal ordenado\n");
+        }
+    }
+    printf("all right\n");
+
+    u32 coloreo_orden_nat = Greedy(G);
+    printf("Cantidad de colores en orden natural: %u\n", coloreo_orden_nat);
+
 
 
     return 0;

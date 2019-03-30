@@ -130,6 +130,10 @@ u32 hash_2(u32 nombre_vert, u32 primo);
 
 u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
 
+/* Funciones de ordenación*/
+
+char OrdenNatural(Grafo G);
+
 
 /* Algoritmos principales */
 
