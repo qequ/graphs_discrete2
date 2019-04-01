@@ -21,24 +21,19 @@ typedef uint32_t u32;
 
 
 /* Estructura de datos para Vértice y operaciones */
+struct VerticeSt {
+    bool                inicializado;
+    u32                 nombre;
+    u32                 color_actual;
+    u32                 grado;
+    u32                 ultvecino_i;
 
-typedef struct vertice vertice_t;
-
-typedef vertice_t * Vertice;
-
-struct vertice {
-    // info del vértice
-    bool inicializado;
-    u32 nombre;
-    u32 color_actual;
-
-    // info útil cuando tengamos que añadir vecinos
-    u32 cant_vecinos;
-    u32 tam_array_vecinos;
-
-    // array de vecinos
-    Vertice * vecinos;
+    // Arreglo de punteros a vértices vecinos
+    struct VerticeSt**  vecinos;
 };
+
+typedef struct VerticeSt * Vertice;
+
 
 void init_vertice(Vertice vertice, u32 nombre);
 
@@ -53,45 +48,47 @@ void imprimirVecinos(Vertice vertice);
 
 /* Estructura de datos para Grafo y operaciones */
 
-struct GrafoSt {
+typedef struct {
     u32 cant_vertices;
     u32 cant_lados;
-    u32 coloreo_actual; // numero máximo de coloreo actual
+    u32 cant_colores;
 
-    Vertice * hash_table_vertices; // útil para cargar lados
-    Vertice * orden_actual; // orden actual de vértices
+    Vertice* vertices;
+} GrafoSt;
 
-};
+typedef GrafoSt * Grafo;
 
-typedef struct GrafoSt grafo_t;
 
-typedef struct GrafoSt * Grafo;
-
+/* Construye un grafo a partir de stdin */
 Grafo ConstruccionDelGrafo();
 
+/* Destruye el grafo, liberando la memoria utilizada */
 void DestruccionDelGrafo(Grafo G);
 
+/* Crea una copia del grafo */
 Grafo CopiarGrafo(Grafo G);
 
-// Funciones para extraer información de los grafos
-
+/* Devuelve la cantidad de vértices de un grafo G */
 u32 NumeroDeVertices(Grafo G);
 
+/* Devuelve la cantidad de lados de un grafo G */
 u32 NumeroDeLados(Grafo G);
 
+/* Devuelve la cantidad de colores presentes en un grafo G */
 u32 NumeroDeColores(Grafo G);
 
-// Funciones para extraer información de los vértices
 
+Vertice ConstruirVertice(u32 nombre, u32 grado);
 
-/* Funciones útiles para hashtable */
+void DestruirVertice(Vertice V);
 
-u32 obtener_primo_para_hash(u32 cant_vertices);
+u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado);
 
-u32 hash_1(Grafo graf, u32 nombre_vert);
+int CompararU32(const void * a, const void * b);
 
-u32 hash_2(u32 nombre_vert, u32 primo);
+void AgregarVecino(Vertice V, Vertice vecino);
 
-u32 obtener_posicion_vertice(Grafo graf, u32 nombre_vert);
+int BuscarVertice(Grafo G, u32 nombre_vert);
+
 
 #endif

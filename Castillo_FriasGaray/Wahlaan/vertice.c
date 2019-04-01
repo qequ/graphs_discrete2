@@ -9,10 +9,9 @@ void init_vertice(Vertice vertice, u32 nombre) {
     // este color es solo temporal, cuando termine ConstrucciónDelGrafo
     // el mismo será distinto
     vertice->color_actual = 0;
-    vertice->tam_array_vecinos = 1;
 
     // Tendrá a lo sumo 1 vecino, luego iremos agregando más vecinos
-    vertice->vecinos = (Vertice *)malloc(sizeof(Vertice));
+    // vertice->vecinos = (Vertice *)malloc(sizeof(Vertice));
 }
 
 
@@ -21,7 +20,7 @@ void destruir_vertice(Vertice vertice) {
     free(vertice->vecinos);
     free(vertice);
 }
-
+/*
 // agregar el vecino B al vertice A (al final del array)
 void agregar_vecino(Vertice A, Vertice B) {
     u32 posicion = A->cant_vecinos;
@@ -54,3 +53,4 @@ void imprimirVecinos(Vertice vertice) {
         printf("%u ", vertice->vecinos[i]->nombre);
     printf("\n");
 }
+*/
