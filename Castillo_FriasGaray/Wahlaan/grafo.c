@@ -1,5 +1,7 @@
 #include "Rii.h"
 
+#define MAX_U32      4294967295  // 2^32 - 1
+
 
 /* Construye un grafo a partir de stdin */
 Grafo ConstruccionDelGrafo() {
@@ -133,9 +135,11 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
-    Grafo grafo = malloc(sizeof(GrafoSt));
-    memcpy(grafo, G, sizeof(GrafoSt));
-    return grafo;
+    Grafo G2 = malloc(sizeof(GrafoSt));
+    memcpy(G2, G, sizeof(GrafoSt));
+    G2->vertices = malloc(sizeof(G->vertices));
+    memcpy(G2->vertices, G->vertices, sizeof(G->vertices));
+    return G2;
 }
 
 
@@ -168,7 +172,7 @@ u32 NombreDelVertice(Grafo G, u32 i) {
 
 u32 ColorDelVertice(Grafo G, u32 i) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
     return (G->vertices[i]->color_actual);
@@ -177,7 +181,7 @@ u32 ColorDelVertice(Grafo G, u32 i) {
 
 u32 GradoDelVertice(Grafo G, u32 i) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
     return (G->vertices[i]->grado);
@@ -185,11 +189,11 @@ u32 GradoDelVertice(Grafo G, u32 i) {
 
 u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
     if (j >= GradoDelVertice(G, i)) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
     return (G->vertices[i]->vecinos[j]->color_actual);
