@@ -9,10 +9,10 @@ u32 max(u32 a, u32 b) {
 
 void decolorear(Grafo G) {
     for (u32 i = 0; i < G->cant_vertices; i++) {
-        G->hash_table_vertices[i]->coloreado = false;
-        G->hash_table_vertices[i]->color_actual = 0;
+        G->vertices[i]->coloreado = false;
+        G->vertices[i]->color_actual = 0;
     }
-    G->coloreo_actual = 0;
+    G->cant_colores = 0;
 }
 
 void colorear(Vertice V, u32 color) {
@@ -27,15 +27,15 @@ u32 Greedy(Grafo G) {
     bool colores_usados[G->cant_vertices + 1];
     memset(colores_usados, false, (G->cant_vertices + 1)*sizeof(bool));
 
-    colorear(G->orden_actual[0], 0);
+    colorear(G->vertices[0], 0);
     u32 max_color = 0;
 
     for (u32 i = 1; i < G->cant_vertices; i++) {
-        Vertice x = G->orden_actual[i];
+        Vertice x = G->vertices[i];
         u32 color_x = 0;
 
         // Recorriendo todos los vecinos de X
-        for (u32 j = 0; j < x->cant_vecinos; j++) {
+        for (u32 j = 0; j < x->grado; j++) {
             // x e y son vecinos
             Vertice y = x->vecinos[j];
 
@@ -62,7 +62,7 @@ u32 Greedy(Grafo G) {
         memset(colores_usados, false, (G->cant_vertices + 1)*sizeof(bool));
     }
 
-    G->coloreo_actual = (max_color + 1);
+    G->cant_colores = (max_color + 1);
     // Como se empieza contando de cero la cantidad de colores es max_color + 1
     return (max_color + 1);
 }
@@ -75,10 +75,10 @@ int Bipartito(Grafo G) {
     Cola q;
     Vertice x, p, vecino;
     // Comenzamos suponiendo que es bipartito
-    G->coloreo_actual = 2;
+    G->cant_colores = 2;
 
     for (u32 j = 0; j < G->cant_vertices; j++) {
-        x = G->orden_actual[j];
+        x = G->vertices[j];
 
         // Si el vértice ya está coloreado no nos importa
         if (x->coloreado) {
@@ -96,7 +96,7 @@ int Bipartito(Grafo G) {
             p = decolar(q);
 
             // Recorriendo los vecinos del vértice decolado
-            for (u32 i = 0; i < p->cant_vecinos; i++) {
+            for (u32 i = 0; i < p->grado; i++) {
                 vecino = p->vecinos[i];
 
                 if (!vecino->coloreado) {
@@ -126,48 +126,4 @@ int Bipartito(Grafo G) {
     // Si llegó acá significa que el grafo fue coloreado con 2 colores
     // i.e. es bipartito
     return 1;
-}
-
-
-int main() {
-    Grafo G = ConstruccionDelGrafo();
-
-/*
-    int bip = Bipartito(G);
-    if (bip == 1) {
-        printf("Es bipartito\n");
-    }
-    else {
-        printf("No es bipartito\n");
-    }
-*/
-
-    OrdenNatural(G);
-    printf("Orden natural según nombre\n");
-    for (u32 i = 0; i < G->cant_vertices - 1; i++) {
-        if (G->orden_actual[i]->nombre > G->orden_actual[i+1]->nombre) {
-            printf("mal ordenado\n");
-        }
-    }
-
-    printf("all right\n");
-
-    u32 coloreo_orden_nat = Greedy(G);
-    printf("Cantidad de colores en orden natural: %u\n", coloreo_orden_nat);
-
-    OrdenWelshPowell(G);
-
-    printf("Orden WelshPowell\n");
-    for (u32 i = 0; i < G->cant_vertices - 1; i++) {
-        if (G->orden_actual[i]->cant_vecinos < G->orden_actual[i+1]->cant_vecinos) {
-            printf("mal ordenado\n");
-        }
-    }
-    printf("all right wp\n");
-
-    u32 coloreo_wp = Greedy(G);
-
-    printf("Cantidad de colores en WelshPowell: %u\n", coloreo_wp);
-
-    return 0;
 }
