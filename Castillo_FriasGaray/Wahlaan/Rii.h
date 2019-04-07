@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <math.h>
+
 
 typedef uint32_t u32;
 
@@ -23,6 +23,7 @@ typedef uint32_t u32;
 /* Estructura de datos para Vértice y operaciones */
 struct VerticeSt {
     bool                inicializado;
+    bool                coloreado;
     u32                 nombre;
     u32                 color_actual;
     u32                 grado;
@@ -51,7 +52,7 @@ void imprimirVecinos(Vertice vertice);
 typedef struct {
     u32 cant_vertices;
     u32 cant_lados;
-    u32 coloreo_actual; // cantidad de colores del coloreo actual
+    u32 cant_colores;
 
     Vertice* vertices;
 } GrafoSt;
