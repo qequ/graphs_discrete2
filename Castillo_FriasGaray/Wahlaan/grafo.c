@@ -138,7 +138,7 @@ Grafo CopiarGrafo(Grafo G) {
     Grafo G2 = malloc(sizeof(GrafoSt));
     memcpy(G2, G, sizeof(GrafoSt));
     G2->vertices = malloc(sizeof(G->vertices));
-    memcpy(G2->vertices, G->vertices, sizeof(G->vertices));
+    memcpy(G2->vertices, G->vertices, sizeof(u32) * G->cant_vertices);
     return G2;
 }
 
