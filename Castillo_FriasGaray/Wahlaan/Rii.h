@@ -16,10 +16,10 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define MAX_U32      4294967295  // 2^32 - 1
+
 
 typedef uint32_t u32;
-
-#define MAX_U32      4294967295  // 2^32 - 1
 
 
 /* Estructura de datos para Vértice y operaciones */
