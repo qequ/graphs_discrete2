@@ -29,6 +29,7 @@ struct VerticeSt {
     u32                 nombre;
     u32                 color_actual;
     u32                 grado;
+    // TODO cambiar este nombre que esta chomaso
     u32                 ultvecino_i;
 
     // Arreglo de punteros a vértices vecinos
