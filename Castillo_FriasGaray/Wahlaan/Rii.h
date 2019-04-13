@@ -3,7 +3,7 @@
 
     Castillo Luciano - email: lucianocastillo22@gmail.com
 
-    Frias Garay Alvaro - email:
+    Frias Garay Alvaro - email: alvarofriasgaray@gmail.com
 
 */
 
@@ -18,6 +18,8 @@
 
 
 typedef uint32_t u32;
+
+#define MAX_U32      4294967295  // 2^32 - 1
 
 
 /* Estructura de datos para Vértice y operaciones */

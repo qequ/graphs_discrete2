@@ -1,7 +1,5 @@
 #include "Rii.h"
 
-#define MAX_U32      4294967295  // 2^32 - 1
-
 
 /* Construye un grafo a partir de stdin */
 Grafo ConstruccionDelGrafo() {
