@@ -1,9 +1,9 @@
 /*
     Integrantes
 
-    Castillo Luciano - email: lucianocastillo22@gmail.com
+    Castillo Luciano    - email: lucianocastillo22@gmail.com
 
-    Frias Garay Alvaro - email: alvarofriasgaray@gmail.com
+    Frias Garay Alvaro  - email: alvarofriasgaray@gmail.com
 
 */
 
