@@ -211,6 +211,7 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     Vertice V = malloc(sizeof(struct VerticeSt));
 
     V->inicializado = true;
+    V->coloreado = false;
     V->nombre = nombre;
     V->color_actual = 0;
     V->ultvecino_i = 0;
