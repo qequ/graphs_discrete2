@@ -20,6 +20,18 @@ void colorear(Vertice V, u32 color) {
     V->color_actual = color;
 }
 
+/*
+    OPTIMIZACIONES A HACER EN GREEDY
+    TODO: 1) Calcular el mayor grado del grafo (tal vez en ConstruccionDelGrafo?)
+             para hacer un array de [delta + 1] colores en vez cant_vertices + 1.
+
+          2) Utilizar memset de manera eficiente; en vez de resetear a false 
+             todo el array cada vez que se cambia de vertice a colorear, llevar
+             registro del máximo color usado y una vez que termina y ya tiene
+             coloreado el vértice, resetear solo hasta el máximo color marcado
+             como usado.
+
+*/
 u32 Greedy(Grafo G) {
     decolorear(G);
 
