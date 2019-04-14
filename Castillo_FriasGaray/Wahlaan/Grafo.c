@@ -81,6 +81,8 @@ Grafo ConstruccionDelGrafo() {
     // Ordenamiento de vértices
     qsort(vertices_repetidos, cant_lados * 2, sizeof(u32), CompararU32);
 
+    G->mayor_grado = 1;
+
     u32 cant_vecinos = 1;
     u32 i = 0;
 
@@ -89,6 +91,8 @@ Grafo ConstruccionDelGrafo() {
         if (vertices_repetidos[i] != vertices_repetidos[i + 1]) {
             // Cuando agrego un vértice ya se el grado
             AgregarVertice(G, vertices_repetidos[i], cant_vecinos);
+
+            if (cant_vecinos > G->mayor_grado) G->mayor_grado = cant_vecinos;
 
             cant_vecinos = 1;
         } else

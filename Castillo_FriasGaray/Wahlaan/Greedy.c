@@ -25,7 +25,7 @@ void colorear(Vertice V, u32 color) {
     TODO: 1) Calcular el mayor grado del grafo (tal vez en ConstruccionDelGrafo?)
              para hacer un array de [delta + 1] colores en vez cant_vertices + 1.
 
-          2) Utilizar memset de manera eficiente; en vez de resetear a false 
+          2) Utilizar memset de manera eficiente; en vez de resetear a false
              todo el array cada vez que se cambia de vertice a colorear, llevar
              registro del máximo color usado y una vez que termina y ya tiene
              coloreado el vértice, resetear solo hasta el máximo color marcado
@@ -36,8 +36,8 @@ u32 Greedy(Grafo G) {
     decolorear(G);
 
     // cota superior de cantidad de vértices + 1 colores
-    bool colores_usados[G->cant_vertices + 1];
-    memset(colores_usados, false, (G->cant_vertices + 1)*sizeof(bool));
+    bool colores_usados[G->mayor_grado + 1];
+    memset(colores_usados, false, (G->mayor_grado + 1) * sizeof(bool));
 
     colorear(G->vertices[0], 0);
     u32 max_color = 0;
@@ -58,7 +58,7 @@ u32 Greedy(Grafo G) {
         }
 
         // Buscar el mínimo color no usado
-        for (u32 color_vert = 0; color_vert < G->cant_vertices + 1; color_vert++) {
+        for (u32 color_vert = 0; color_vert < G->mayor_grado + 1; color_vert++) {
             if (!colores_usados[color_vert]) {
                 color_x = color_vert;
                 break;
@@ -71,7 +71,7 @@ u32 Greedy(Grafo G) {
         max_color = max(max_color, color_x);
 
         // resetear el array de colores usados para el siguiente vértice
-        memset(colores_usados, false, (G->cant_vertices + 1)*sizeof(bool));
+        memset(colores_usados, false, (G->mayor_grado + 1) * sizeof(bool));
     }
 
     G->cant_colores = (max_color + 1);
