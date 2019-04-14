@@ -21,80 +21,21 @@
 
 typedef uint32_t u32;
 
+/*
+    Estructura de datos para Vértice y operaciones.
+*/
+#include "Vertice.h"
 
-/* Estructura de datos para Vértice y operaciones */
-struct VerticeSt {
-    bool                inicializado;
-    bool                coloreado;
-    u32                 nombre;
-    u32                 color_actual;
-    u32                 grado;
-    // TODO cambiar este nombre que esta chomaso
-    u32                 ultvecino_i;
+/*
+    Estructura de datos para Grafo y operaciones.
+*/
+#include "Grafo.h"
 
-    // Arreglo de punteros a vértices vecinos
-    struct VerticeSt**  vecinos;
-};
-
-typedef struct VerticeSt * Vertice;
-
-
-void init_vertice(Vertice vertice, u32 nombre);
-
-void destruir_vertice(Vertice vertice);
-
-void agregar_vecino(Vertice A, Vertice B);
-
-void optimizar_memoria(Vertice A);
-
-void imprimirVecinos(Vertice vertice);
-
-
-/* Estructura de datos para Grafo y operaciones */
-
-typedef struct {
-    u32 cant_vertices;
-    u32 cant_lados;
-    u32 cant_colores;
-
-    Vertice* vertices;
-} GrafoSt;
-
-typedef GrafoSt * Grafo;
-
-
-/* Construye un grafo a partir de stdin */
-Grafo ConstruccionDelGrafo();
-
-/* Destruye el grafo, liberando la memoria utilizada */
-void DestruccionDelGrafo(Grafo G);
-
-/* Crea una copia del grafo */
-Grafo CopiarGrafo(Grafo G);
-
-
-/* Estructura de Cola y operaciones. Útil para Bipartito */
-
-struct ColaSt{
-    Vertice *elems;
-    u32 first;
-    u32 size;
-    u32 n;
-};
-
-typedef struct ColaSt cola_t;
-
-typedef struct ColaSt * Cola;
-
-Cola crear_cola(u32 n);
-
-void encolar(Cola q, Vertice elem);
-
-Vertice decolar(Cola q);
-
-u32 cola_vacia(Cola q);
-
-void destruir_cola(Cola q);
+/*
+    Estructura de Cola y operaciones.
+    Útil para Bipartito.
+*/
+#include "Cola.h"
 
 
 // Funciones para extraer información de los grafos
