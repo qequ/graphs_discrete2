@@ -100,6 +100,7 @@ Grafo ConstruccionDelGrafo() {
     free(vertices_repetidos);
     printf("Liberado\n");
 
+    // TODO: sacar este coloreo y colorear con Greedy
     // Coloreo propio para G
     for (u32 i = 0; i < cant_vertices; ++i)
         G->vertices[i]->color_actual = i + 1;
@@ -206,11 +207,13 @@ u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
 }
 
 
+// TODO: mover todas las operaciones de vertices a vertice.c
 Vertice ConstruirVertice(u32 nombre, u32 grado)
 {
     Vertice V = malloc(sizeof(struct VerticeSt));
 
     V->inicializado = true;
+    V->coloreado = false;
     V->nombre = nombre;
     V->color_actual = 0;
     V->ultvecino_i = 0;
