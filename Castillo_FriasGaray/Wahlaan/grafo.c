@@ -1,256 +1,269 @@
 #include "Rii.h"
 
 
-void DestruccionDelGrafo(Grafo G) {
-    for (u32 i = 0; i < G->cant_vertices; i++) {
-        // Si está inicializado hay que utilizar la función destruir_vertice
-        // ya que init_vertice usa un malloc para el array de vecinos
-        if (G->hash_table_vertices[i]->inicializado) {
-            destruir_vertice(G->hash_table_vertices[i]);
-        }
-        else {
-        free(G->hash_table_vertices[i]);
-        }
-    }
-    free(G->hash_table_vertices);
-    free(G->orden_actual);
-    free(G);
-    printf("Liberada toda la memoria\n");
-}
-
-
-void agregar_lado(Grafo graf, u32 nombre_vert_a, u32 nombre_vert_b) {
-    // Buscando las posiciones de los vértices en la hash table
-    u32 posicion_vert_a = obtener_posicion_vertice(graf, nombre_vert_a);
-    u32 posicion_vert_b = obtener_posicion_vertice(graf, nombre_vert_b);
-
-    // Recuperando los vértices
-    Vertice vert_a = graf->hash_table_vertices[posicion_vert_a];
-    Vertice vert_b = graf->hash_table_vertices[posicion_vert_b];
-
-    // agregar vértices como vecinos entre si(dado que es grafo no dirigido)
-    agregar_vecino(vert_a, vert_b);
-    agregar_vecino(vert_b, vert_a);
-}
-
-
-bool hay_vertices_no_inicializados(Grafo graf) {
-    for (u32 i = 0; i < graf->cant_vertices; i++) {
-        if (!graf->hash_table_vertices[i]->inicializado) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-void optimizar_hash_table(Grafo graf) {
-    for (u32 i = 0; i < graf->cant_vertices; i++) {
-        optimizar_memoria(graf->hash_table_vertices[i]);
-    }
-}
-
-void dumpear_hash_table(Grafo g) {
-    for (u32 i = 0; i < g->cant_vertices; i++) {
-        printf("en posicion %u del hash table:\n", i);
-        printf("nombre vertice: %u\n", g->hash_table_vertices[i]->nombre);
-        printf("Vecinos:\n");
-        imprimirVecinos(g->hash_table_vertices[i]);
-    }
-}
-
-
-
+/* Construye un grafo a partir de stdin */
 Grafo ConstruccionDelGrafo() {
-    Grafo grafo;
-    u32 cant_vertices, cant_lados;
-    char check_edge[4];
+    u32 vert_1, vert_2, cant_vertices, cant_lados;
+    u32 *vertices_repetidos, *lados;
+    Grafo G;
     char c;
 
-    // Saltando los comentarios
-    while ((c = getchar()) == 'c') {
-        while ((c = getchar()) != '\n') {
+    // Se ignoran los comentarios iniciales
+    while((c = getchar()) == 'c')
+        while (getchar() != '\n')
             ;
-        }
-    }
 
-    // Chequeando la línea "p edge x y"
-    if (c != 'p') {
-        printf("error en primera linea sin comentario\n");
-        return NULL;
-    }
-    if (scanf("%s", check_edge) != 1) return NULL;
-    if (strcmp(check_edge, "edge") != 0) {
-        printf("error en primera linea sin comentario\n");
+    if (c != 'p'){
+        printf("Formato incorrecto!\n");
         return NULL;
     }
 
-    if (scanf("%u", &cant_vertices) != 1) return NULL;
-    if (scanf("%u", &cant_lados) != 1) return NULL;
-
-    // Allocando grafo
-    grafo = malloc(sizeof(grafo_t));
-    // Si falla allocando memoria
-    if (grafo == NULL) return NULL;
-
-    grafo->cant_vertices = cant_vertices;
-    grafo->cant_lados = cant_lados;
-    grafo->hash_table_vertices = (Vertice *)calloc(cant_vertices, sizeof(Vertice));
-
-    if (grafo->hash_table_vertices == NULL) {
-        printf("fallo al allocar memoria\n");
-        free(grafo);
+    // Ya tenemos la p, buscamos una línea de la forma: `p edge x y`
+    if(scanf(" edge %u %u\n", &cant_vertices, &cant_lados) <= 0){
+        printf("Formato incorrecto!\n");
         return NULL;
     }
 
-    // Añadiendo vértices sin inicializar a la hash table
-    for (u32 i = 0; i < grafo->cant_vertices; i++) {
-        grafo->hash_table_vertices[i] = (Vertice)malloc(sizeof(vertice_t));
+    // Pedimos memoria para guardar la estructura de grafo.
+    // Calloc rellena con ceros la estructura.
+    G = calloc(1, sizeof(GrafoSt));
 
-        // Liberar toda la memoria ocupada si falla al allocar
-        if ((grafo->hash_table_vertices[i]) == NULL) {
-            printf("fallo al allocar memoria\n");
+    if(G == NULL){
+        printf("Error al intentar alocar memoria!\n");
+        return NULL;
+    }
 
-            for (u32 j = 0; j < i; j++) {
-                // Liberar cada struct de vertice hasta el momento
-                free(grafo->hash_table_vertices[j]);
-            }
-            free(grafo->hash_table_vertices);
-            free(grafo);
+    // Pedimos memoria para cargar los vértices
+    G->vertices = (Vertice*) malloc(sizeof(Vertice) * cant_vertices);
 
+    // Pedimos memoria para el auxiliar de vértices con repeticiones
+    vertices_repetidos = (u32*) malloc(sizeof(u32) * cant_lados * 2);
+
+    if(G->vertices == NULL || vertices_repetidos == NULL){
+        printf("Error al intentar alocar memoria!\n");
+        free(vertices_repetidos);
+        free(G->vertices);
+        free(G);
+        return NULL;
+    }
+
+    for (u32 i = 0; i < cant_lados; ++i) {
+        // Leemos líneas de la forma: `e vertice1 vertice2`
+        if (scanf("e %u %u\n", &vert_1, &vert_2) <= 0) {
+            printf("Formato incorrecto!\n");
+            free(vertices_repetidos);
+            free(G->vertices);
+            free(G);
             return NULL;
         }
 
-        grafo->hash_table_vertices[i]->inicializado = false;
+        // Se guardan todos los nombres de vértices en el arreglo auxiliar
+        // de manera que queden pares [ |x1 y1|  |x2 y2|  ...  |xn yn| ]
+        vertices_repetidos[2 * i] = vert_1;
+        vertices_repetidos[2 * i + 1] = vert_2;
     }
 
-    grafo->orden_actual = (Vertice *)malloc(grafo->cant_vertices * sizeof(Vertice));
+    // Pedimos memoria para arreglo auxiliar de lados
+    lados = (u32*) malloc(sizeof(u32) * cant_lados * 2);
 
-    if (grafo->orden_actual == NULL) {
-        // Liberando toda la memoria
-        for (u32 i = 0; i < grafo->cant_vertices; i++) {
-            free(grafo->hash_table_vertices[i]);
-        }
-        free(grafo->hash_table_vertices);
-        free(grafo);
+    if (lados == NULL) {
+        printf("Error al intentar alocar memoria!\n");
+        free(vertices_repetidos);
+        free(G->vertices);
+        free(G);
         return NULL;
     }
+    // Copio el arreglo
+    for (u32 i = 0; i < cant_lados * 2; ++i)
+        lados[i] = vertices_repetidos[i];
 
-    // Una vez que terminó de allocar las estructuras empieza a tomar lados
+    // Ordenamiento de vértices
+    qsort(vertices_repetidos, cant_lados * 2, sizeof(u32), CompararU32);
+    printf("Ordenado\n");
 
-    // Nombre de los vértices que conforman el lado
-    u32 nombre_vert_a, nombre_vert_b;
+    u32 cant_vecinos = 1;
+    u32 i = 0;
 
-    // Calcular el primo para la hash_table(se hace acá para no tener que
-    // calcularlo cada vez que buscamos un lado)
-    //u32 primo_hash = obtener_primo_para_hash(grafo->cant_vertices);
+    // Se agregan los demás vértices sin repeticiones
+    for (; i < (cant_lados * 2) - 1; ++i) {
+        if (vertices_repetidos[i] != vertices_repetidos[i + 1]) {
+            // Cuando agrego un vértice ya se el grado
+            AgregarVertice(G, vertices_repetidos[i], cant_vecinos);
 
-    for (u32 i = 0; i < grafo->cant_lados; i++) {
-        if (scanf("%*s") != 0) {
-            DestruccionDelGrafo(grafo);
-            printf("Error de lectura en %u\n", i+1);
-            return NULL;
-        }
+            cant_vecinos = 1;
+        } else
+            cant_vecinos++;
+    }
+    AgregarVertice(G, vertices_repetidos[i], cant_vecinos);
 
-        if (scanf("%u", &nombre_vert_a) != 1) {
-            DestruccionDelGrafo(grafo);
-            printf("Error de lectura en %u\n", i+1);
-            return NULL;
-        }
-        if (scanf("%u", &nombre_vert_b) != 1) {
-            DestruccionDelGrafo(grafo);
-            printf("Error de lectura en %u\n", i+1);
-            return NULL;
-        }
+    // Libero el arreglo auxiliar
+    free(vertices_repetidos);
+    printf("Liberado\n");
 
-        agregar_lado(grafo, nombre_vert_a, nombre_vert_b);
-        printf("lado %u %u agregado\n", nombre_vert_a, nombre_vert_b);
+    // TODO: sacar este coloreo y colorear con Greedy
+    // Coloreo propio para G
+    for (u32 i = 0; i < cant_vertices; ++i)
+        G->vertices[i]->color_actual = i + 1;
+
+
+    Vertice vecino, vert;
+
+    // Agrego los vecinos
+    for (u32 i = 0; i < cant_lados; ++i) {
+        vert = G->vertices[BuscarVertice(G, lados[2 * i])];
+        vecino = G->vertices[BuscarVertice(G, lados[2 * i + 1])];
+
+        AgregarVecino(vert, vecino);
+        AgregarVecino(vecino, vert);
     }
 
+    // Libero el arreglo auxiliar de lados
+    free(lados);
 
-    // chequeando que el total de vértices extraido es n
-    if (hay_vertices_no_inicializados(grafo)) {
-        printf("cantidad de vertices leidos no es la declarada\n");
-        return NULL;
-    }
-
-    // liberando espacio sin usar(si quedó) de array de vecinos de cada vértice
-    optimizar_hash_table(grafo);
-
-    // Copiando punteros de hash_table a array de orden
-    // memcpy(grafo->orden, grafo->hashTable, grafo->cantVertices * sizeof(Vertice));
-    if (memcpy(grafo->orden_actual, grafo->hash_table_vertices, grafo->cant_vertices * sizeof(Vertice)) == NULL) {
-        printf("fallo al copiar hash table\n");
-        return NULL;
-    }
-
-
-    u32 coloreo = Greedy(grafo);
-    printf("Coloreo con %u colores\n", coloreo);
-
-    return grafo;
+    G->cant_lados = cant_lados;
+    return G;
 }
 
+/* Destruye el grafo, liberando la memoria utilizada */
+void DestruccionDelGrafo(Grafo G) {
+    for (u32 i = 0; i < G->cant_vertices; ++i)
+        DestruirVertice(G->vertices[i]);
+
+    free(G->vertices);
+    free(G);
+}
 
 Grafo CopiarGrafo(Grafo G) {
-
-    Grafo grafo = malloc(sizeof(grafo_t));
-    memcpy(grafo, G, sizeof(grafo_t));
-
-    return grafo;
+    Grafo G2 = malloc(sizeof(GrafoSt));
+    memcpy(G2, G, sizeof(GrafoSt));
+    G2->vertices = malloc(sizeof(G->vertices));
+    memcpy(G2->vertices, G->vertices, sizeof(u32) * G->cant_vertices);
+    return G2;
 }
 
 
+int CompararU32(const void * a, const void * b) {
+    u32 primero = *(u32*) a;
+    u32 segundo = *(u32*) b;
+    return primero >= segundo;
+}
+
+// ----------Funciones para extraer info de los grafos----//
+
+/* Devuelve la cantidad de vértices de un grafo G */
 u32 NumeroDeVertices(Grafo G) {
-    return (G->cant_vertices);
+    return G->cant_vertices;
 }
-
 
 u32 NumeroDeLados(Grafo G) {
-    return (G->cant_lados);
+    return G->cant_lados;
 }
-
 
 u32 NumeroDeColores(Grafo G) {
-    return (G->coloreo_actual);
+    return G->cant_colores;
 }
 
+// ----------Funciones para extraer info de los vértices----//
 
 u32 NombreDelVertice(Grafo G, u32 i) {
-    return (G->orden_actual[i]->nombre);
+    return G->vertices[i]->nombre;
 }
 
 u32 ColorDelVertice(Grafo G, u32 i) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
-    return (G->orden_actual[i]->color_actual);
+    return (G->vertices[i]->color_actual);
 }
 
 
 u32 GradoDelVertice(Grafo G, u32 i) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
-    return (G->orden_actual[i]->cant_vecinos);
+    return (G->vertices[i]->grado);
 }
-
 
 u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
     if (i >= G->cant_vertices) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
     if (j >= GradoDelVertice(G, i)) {
-        return (pow(2, 32) - 1);
+        return (MAX_U32);
     }
 
-    return (G->orden_actual[i]->vecinos[j]->color_actual);
+    return (G->vertices[i]->vecinos[j]->color_actual);
+}
+
+u32 NombreJotaesimoVecino(Grafo G, u32 i, u32 j) {
+    return G->vertices[i]->vecinos[j]->nombre;
+}
+
+u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
+    return G->vertices[i]->vecinos[j]->grado;
 }
 
 
-u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j) {
-    return (G->orden_actual[i]->vecinos[j]->nombre);
+// TODO: mover todas las operaciones de vertices a vertice.c
+Vertice ConstruirVertice(u32 nombre, u32 grado)
+{
+    Vertice V = malloc(sizeof(struct VerticeSt));
+
+    V->inicializado = true;
+    V->coloreado = false;
+    V->nombre = nombre;
+    V->color_actual = 0;
+    V->ultvecino_i = 0;
+    V->grado = grado;
+    V->vecinos = (Vertice*) malloc(sizeof(Vertice) * grado);
+
+    return V;
+}
+
+void DestruirVertice(Vertice V) {
+    free(V->vecinos);
+    free(V);
+}
+
+u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado) {
+    u32 i_vertice;
+
+    G->vertices[G->cant_vertices] = ConstruirVertice(nombre_vertice, grado);
+    i_vertice = G->cant_vertices;
+    ++G->cant_vertices;
+    return i_vertice;
+}
+
+void AgregarVecino(Vertice V, Vertice vecino) {
+    V->vecinos[V->ultvecino_i] = vecino;
+    ++V->ultvecino_i;
+}
+
+int BuscarVertice(Grafo G, u32 nombre_vert) {
+    int bajo;
+    int alto;
+    int mitad = 0;
+    bool encontrado = false;
+
+    bajo = 0;
+    alto = G->cant_vertices - 1;
+
+    while (bajo <= alto && !encontrado) {
+        mitad = (alto + bajo) / 2;
+
+        if (nombre_vert == G->vertices[mitad]->nombre)
+            encontrado = 1;
+        else if (nombre_vert < G->vertices[mitad]->nombre)
+            alto = mitad - 1;
+        else
+            bajo = mitad + 1;
+    }
+
+    if (encontrado)
+        return mitad;
+    else
+        return -1;
 }
