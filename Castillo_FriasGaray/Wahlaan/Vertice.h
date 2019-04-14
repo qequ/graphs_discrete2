@@ -4,7 +4,8 @@ struct VerticeSt {
     u32                 nombre;
     u32                 color_actual;
     u32                 grado;
-    u32                 ultvecino_i;
+    u32                 cant_bloque;
+    u32                 pos_ultimo_vecino;
 
     // Arreglo de punteros a vértices vecinos
     struct VerticeSt**  vecinos;
@@ -13,12 +14,8 @@ struct VerticeSt {
 typedef struct VerticeSt * Vertice;
 
 
-void init_vertice(Vertice vertice, u32 nombre);
+Vertice ConstruirVertice(u32 nombre, u32 grado);
 
-void destruir_vertice(Vertice vertice);
+void DestruirVertice(Vertice V);
 
-void agregar_vecino(Vertice A, Vertice B);
-
-void optimizar_memoria(Vertice A);
-
-void imprimirVecinos(Vertice vertice);
+void AgregarVecino(Vertice V, Vertice vecino);
