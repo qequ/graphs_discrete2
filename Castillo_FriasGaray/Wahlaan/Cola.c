@@ -1,12 +1,13 @@
 #include "Rii.h"
 
+
 Cola crear_cola(u32 n) {
-    Cola q = malloc(sizeof(struct ColaSt));
+    Cola q = malloc(sizeof(cola_t));
     q->elems = malloc(n * sizeof(Vertice));
     q->first = 0;
     q->size = 0;
     q->n = n;
-    return q; 
+    return q;
 }
 
 void encolar(Cola q, Vertice elem) {

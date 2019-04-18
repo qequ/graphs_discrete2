@@ -23,6 +23,7 @@ Grafo ConstruccionDelGrafo() {
         printf("Formato incorrecto!\n");
         return NULL;
     }
+    printf("Cantidad de vertices: %u\nCantidad de lados: %u\n", cant_vertices, cant_lados);
 
     // Pedimos memoria para guardar la estructura de grafo.
     // Calloc rellena con ceros la estructura.
@@ -79,7 +80,6 @@ Grafo ConstruccionDelGrafo() {
 
     // Ordenamiento de vértices
     qsort(vertices_repetidos, cant_lados * 2, sizeof(u32), CompararU32);
-    printf("Ordenado\n");
 
     u32 cant_vecinos = 1;
     u32 i = 0;
@@ -98,13 +98,6 @@ Grafo ConstruccionDelGrafo() {
 
     // Libero el arreglo auxiliar
     free(vertices_repetidos);
-    printf("Liberado\n");
-
-    // TODO: sacar este coloreo y colorear con Greedy
-    // Coloreo propio para G
-    for (u32 i = 0; i < cant_vertices; ++i)
-        G->vertices[i]->color_actual = i + 1;
-
 
     Vertice vecino, vert;
 
@@ -121,6 +114,11 @@ Grafo ConstruccionDelGrafo() {
     free(lados);
 
     G->cant_lados = cant_lados;
+
+    // Coloreo G usando Greedy
+    printf("Coloreando con Greedy...\n");
+    G->cant_colores = Greedy(G);
+    printf("Coloreado con %u colores\n", G->cant_colores);
     return G;
 }
 
@@ -207,27 +205,6 @@ u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
 }
 
 
-// TODO: mover todas las operaciones de vertices a vertice.c
-Vertice ConstruirVertice(u32 nombre, u32 grado)
-{
-    Vertice V = malloc(sizeof(struct VerticeSt));
-
-    V->inicializado = true;
-    V->coloreado = false;
-    V->nombre = nombre;
-    V->color_actual = 0;
-    V->ultvecino_i = 0;
-    V->grado = grado;
-    V->vecinos = (Vertice*) malloc(sizeof(Vertice) * grado);
-
-    return V;
-}
-
-void DestruirVertice(Vertice V) {
-    free(V->vecinos);
-    free(V);
-}
-
 u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado) {
     u32 i_vertice;
 
@@ -235,11 +212,6 @@ u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado) {
     i_vertice = G->cant_vertices;
     ++G->cant_vertices;
     return i_vertice;
-}
-
-void AgregarVecino(Vertice V, Vertice vecino) {
-    V->vecinos[V->ultvecino_i] = vecino;
-    ++V->ultvecino_i;
 }
 
 int BuscarVertice(Grafo G, u32 nombre_vert) {
