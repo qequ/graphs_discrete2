@@ -75,7 +75,7 @@ int comparar_cant_bloque_creciente(const void * a, const void * b) {
     if (v1->color_actual == v2->color_actual)
         return 0;
 
-    return v2->cant_bloque - v1->cant_bloque;
+    return v1->cant_bloque - v2->cant_bloque;
 }
 
 char RMBCchicogrande(Grafo G) {
