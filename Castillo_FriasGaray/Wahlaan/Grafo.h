@@ -2,6 +2,7 @@ typedef struct {
     u32 cant_vertices;
     u32 cant_lados;
     u32 cant_colores;
+    u32 mayor_grado;
 
     Vertice* vertices;
 } GrafoSt;
