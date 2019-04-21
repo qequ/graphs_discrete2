@@ -7,8 +7,8 @@ struct VerticeSt {
     u32                 cant_bloque;
     u32                 pos_ultimo_vecino;
 
-    // Arreglo de punteros a vértices vecinos
-    struct VerticeSt**  vecinos;
+    // Arreglo de indices a vértices vecinos
+    u32*                indices_vecinos;
 };
 
 typedef struct VerticeSt * Vertice;
@@ -17,3 +17,5 @@ typedef struct VerticeSt * Vertice;
 Vertice ConstruirVertice(u32 nombre, u32 grado);
 
 void DestruirVertice(Vertice V);
+
+Vertice CopiarVertice(Vertice V);

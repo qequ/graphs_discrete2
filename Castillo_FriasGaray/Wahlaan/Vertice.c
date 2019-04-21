@@ -12,20 +12,20 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     V->cant_bloque = 0;
     V->pos_ultimo_vecino = 0;
     V->grado = grado;
-    V->vecinos = (Vertice*) malloc(sizeof(Vertice) * grado);
+    V->indices_vecinos = (u32*) malloc(sizeof(u32) * grado);
 
     return V;
 }
 
-// Vertice CopiarVertice(Vertice V) {
-//     Vertice copia = malloc(sizeof(struct VerticeSt));
-//     memcpy(copia, V, sizeof(struct VerticeSt));
-//     copia->vecinos = malloc(sizeof(V->vecinos));
-//     memcpy(copia->vecinos, V->vecinos, sizeof(u32) * V->grado);
-//     return copia;
-// }
+Vertice CopiarVertice(Vertice V) {
+    Vertice copia = malloc(sizeof(struct VerticeSt));
+    memcpy(copia, V, sizeof(struct VerticeSt));
+    copia->indices_vecinos = malloc(sizeof(V->indices_vecinos));
+    memcpy(copia->indices_vecinos, V->indices_vecinos, sizeof(u32) * V->grado);
+    return copia;
+}
 
 void DestruirVertice(Vertice V) {
-    free(V->vecinos);
+    free(V->indices_vecinos);
     free(V);
 }

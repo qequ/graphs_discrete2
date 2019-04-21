@@ -114,10 +114,10 @@ Grafo ConstruccionDelGrafo() {
         v1 = G->vertices[indice1];
         v2 = G->vertices[indice2];
 
-        v1->vecinos[v1->pos_ultimo_vecino] = v2;
+        v1->indices_vecinos[v1->pos_ultimo_vecino] = indice2;
         ++v1->pos_ultimo_vecino;
 
-        v2->vecinos[v2->pos_ultimo_vecino] = v2;
+        v2->indices_vecinos[v2->pos_ultimo_vecino] = indice1;
         ++v2->pos_ultimo_vecino;
     }
 
@@ -150,10 +150,10 @@ Grafo CopiarGrafo(Grafo G) {
     G2->vertices = malloc(sizeof(G->vertices));
     memcpy(G2->vertices, G->vertices, sizeof(Vertice) * G->cant_vertices);
 
-    // for (u32 i = 0; i < G->cant_vertices; ++i) {
-    //     copia = CopiarVertice(G->vertices[i]);
-    //     G2->vertices[i] = copia;
-    // }
+    for (u32 i = 0; i < G->cant_vertices; ++i) {
+        copia = CopiarVertice(G->vertices[i]);
+        G2->vertices[i] = copia;
+    }
 
     return G2;
 }
@@ -211,15 +211,19 @@ u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
         return (MAX_U32);
     }
 
-    return (G->vertices[i]->vecinos[j]->color_actual);
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+
+    return (G->vertices[ind]->color_actual);
 }
 
 u32 NombreJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    return G->vertices[i]->vecinos[j]->nombre;
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+    return G->vertices[ind]->nombre;
 }
 
 u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    return G->vertices[i]->vecinos[j]->grado;
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+    return G->vertices[ind]->grado;
 }
 
 
