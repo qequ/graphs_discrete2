@@ -60,8 +60,8 @@ Grafo ConstruccionDelGrafo() {
 
         // Se guardan todos los nombres de vértices en el arreglo auxiliar
         // de manera que queden pares [ |x1 y1|  |x2 y2|  ...  |xn yn| ]
-        vertices_repetidos[2 * i] = vert_1;
-        vertices_repetidos[2 * i + 1] = vert_2;
+        vertices_repetidos[2*i] = vert_1;
+        vertices_repetidos[2*i + 1] = vert_2;
     }
 
     // Pedimos memoria para arreglo auxiliar de lados
@@ -107,8 +107,8 @@ Grafo ConstruccionDelGrafo() {
 
     // Agrego los vecinos
     for (u32 i = 0; i < cant_lados; ++i) {
-        vert = G->vertices[BuscarVertice(G, lados[2 * i])];
-        vecino = G->vertices[BuscarVertice(G, lados[2 * i + 1])];
+        vert = G->vertices[BuscarVertice(G, lados[2*i])];
+        vecino = G->vertices[BuscarVertice(G, lados[2*i + 1])];
 
         AgregarVecino(vert, vecino);
         AgregarVecino(vecino, vert);
@@ -136,13 +136,20 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
+    Vertice copia;
+
     Grafo G2 = malloc(sizeof(GrafoSt));
     memcpy(G2, G, sizeof(GrafoSt));
     G2->vertices = malloc(sizeof(G->vertices));
-    memcpy(G2->vertices, G->vertices, sizeof(u32) * G->cant_vertices);
+    memcpy(G2->vertices, G->vertices, sizeof(Vertice) * G->cant_vertices);
+
+    // for (u32 i = 0; i < G->cant_vertices; ++i) {
+    //     copia = CopiarVertice(G->vertices[i]);
+    //     G2->vertices[i] = copia;
+    // }
+
     return G2;
 }
-
 
 int CompararU32(const void * a, const void * b) {
     u32 primero = *(u32*) a;

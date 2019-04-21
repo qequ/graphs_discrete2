@@ -17,6 +17,14 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     return V;
 }
 
+// Vertice CopiarVertice(Vertice V) {
+//     Vertice copia = malloc(sizeof(struct VerticeSt));
+//     memcpy(copia, V, sizeof(struct VerticeSt));
+//     copia->vecinos = malloc(sizeof(V->vecinos));
+//     memcpy(copia->vecinos, V->vecinos, sizeof(u32) * V->grado);
+//     return copia;
+// }
+
 void DestruirVertice(Vertice V) {
     free(V->vecinos);
     free(V);
