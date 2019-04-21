@@ -68,8 +68,6 @@ u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado);
 
 int CompararU32(const void * a, const void * b);
 
-void AgregarVecino(Vertice V, Vertice vecino);
-
 int BuscarVertice(Grafo G, u32 nombre_vert);
 
 

@@ -29,8 +29,3 @@ void DestruirVertice(Vertice V) {
     free(V->vecinos);
     free(V);
 }
-
-void AgregarVecino(Vertice V, Vertice vecino) {
-    V->vecinos[V->pos_ultimo_vecino] = vecino;
-    ++V->pos_ultimo_vecino;
-}

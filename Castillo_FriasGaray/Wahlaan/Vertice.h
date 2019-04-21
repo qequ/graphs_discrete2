@@ -17,5 +17,3 @@ typedef struct VerticeSt * Vertice;
 Vertice ConstruirVertice(u32 nombre, u32 grado);
 
 void DestruirVertice(Vertice V);
-
-void AgregarVecino(Vertice V, Vertice vecino);

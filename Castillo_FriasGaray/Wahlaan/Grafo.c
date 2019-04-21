@@ -103,15 +103,22 @@ Grafo ConstruccionDelGrafo() {
     // Libero el arreglo auxiliar
     free(vertices_repetidos);
 
-    Vertice vecino, vert;
+    Vertice v1, v2;
+    u32 indice1, indice2;
 
     // Agrego los vecinos
     for (u32 i = 0; i < cant_lados; ++i) {
-        vert = G->vertices[BuscarVertice(G, lados[2*i])];
-        vecino = G->vertices[BuscarVertice(G, lados[2*i + 1])];
+        indice1 = BuscarVertice(G, lados[2*i]);
+        indice2 = BuscarVertice(G, lados[2*i + 1]);
 
-        AgregarVecino(vert, vecino);
-        AgregarVecino(vecino, vert);
+        v1 = G->vertices[indice1];
+        v2 = G->vertices[indice2];
+
+        v1->vecinos[v1->pos_ultimo_vecino] = v2;
+        ++v1->pos_ultimo_vecino;
+
+        v2->vecinos[v2->pos_ultimo_vecino] = v2;
+        ++v2->pos_ultimo_vecino;
     }
 
     // Libero el arreglo auxiliar de lados
