@@ -143,16 +143,22 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
-    Vertice copia;
-
+    // Copio la estructura del grafo
     Grafo G2 = malloc(sizeof(GrafoSt));
     memcpy(G2, G, sizeof(GrafoSt));
-    G2->vertices = malloc(sizeof(G->vertices));
+
+    // Copio todos los vertices
+    G2->vertices = malloc(sizeof(Vertice) * G->cant_vertices);
     memcpy(G2->vertices, G->vertices, sizeof(Vertice) * G->cant_vertices);
 
     for (u32 i = 0; i < G->cant_vertices; ++i) {
-        copia = CopiarVertice(G->vertices[i]);
-        G2->vertices[i] = copia;
+        // Copio la estructura de vertice
+        G2->vertices[i] = malloc(sizeof(VerticeSt));
+        memcpy(G2->vertices[i], G->vertices[i], sizeof(VerticeSt));
+
+        // Copio el arreglo de índices de vecinos
+        G2->vertices[i]->indices_vecinos = malloc(sizeof(u32) * G->vertices[i]->grado);
+        memcpy(G2->vertices[i]->indices_vecinos, G->vertices[i]->indices_vecinos, sizeof(u32) * G->vertices[i]->grado);
     }
 
     return G2;

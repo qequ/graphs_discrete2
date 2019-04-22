@@ -1,4 +1,4 @@
-struct VerticeSt {
+typedef struct {
     bool                inicializado;
     bool                coloreado;
     u32                 nombre;
@@ -9,13 +9,11 @@ struct VerticeSt {
 
     // Arreglo de indices a vértices vecinos
     u32*                indices_vecinos;
-};
+} VerticeSt;
 
-typedef struct VerticeSt * Vertice;
+typedef VerticeSt * Vertice;
 
 
 Vertice ConstruirVertice(u32 nombre, u32 grado);
 
 void DestruirVertice(Vertice V);
-
-Vertice CopiarVertice(Vertice V);

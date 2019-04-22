@@ -3,7 +3,7 @@
 
 Vertice ConstruirVertice(u32 nombre, u32 grado)
 {
-    Vertice V = malloc(sizeof(struct VerticeSt));
+    Vertice V = malloc(sizeof(VerticeSt));
 
     V->inicializado = true;
     V->coloreado = false;
@@ -15,14 +15,6 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     V->indices_vecinos = (u32*) malloc(sizeof(u32) * grado);
 
     return V;
-}
-
-Vertice CopiarVertice(Vertice V) {
-    Vertice copia = malloc(sizeof(struct VerticeSt));
-    memcpy(copia, V, sizeof(struct VerticeSt));
-    copia->indices_vecinos = malloc(sizeof(V->indices_vecinos));
-    memcpy(copia->indices_vecinos, V->indices_vecinos, sizeof(u32) * V->grado);
-    return copia;
 }
 
 void DestruirVertice(Vertice V) {
