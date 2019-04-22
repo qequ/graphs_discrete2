@@ -3,7 +3,7 @@
 
 Vertice ConstruirVertice(u32 nombre, u32 grado)
 {
-    Vertice V = malloc(sizeof(struct VerticeSt));
+    Vertice V = malloc(sizeof(VerticeSt));
 
     V->inicializado = true;
     V->coloreado = false;
@@ -12,17 +12,12 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     V->cant_bloque = 0;
     V->pos_ultimo_vecino = 0;
     V->grado = grado;
-    V->vecinos = (Vertice*) malloc(sizeof(Vertice) * grado);
+    V->indices_vecinos = (u32*) malloc(sizeof(u32) * grado);
 
     return V;
 }
 
 void DestruirVertice(Vertice V) {
-    free(V->vecinos);
+    free(V->indices_vecinos);
     free(V);
-}
-
-void AgregarVecino(Vertice V, Vertice vecino) {
-    V->vecinos[V->pos_ultimo_vecino] = vecino;
-    ++V->pos_ultimo_vecino;
 }

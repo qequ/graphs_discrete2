@@ -60,8 +60,8 @@ Grafo ConstruccionDelGrafo() {
 
         // Se guardan todos los nombres de vértices en el arreglo auxiliar
         // de manera que queden pares [ |x1 y1|  |x2 y2|  ...  |xn yn| ]
-        vertices_repetidos[2 * i] = vert_1;
-        vertices_repetidos[2 * i + 1] = vert_2;
+        vertices_repetidos[2*i] = vert_1;
+        vertices_repetidos[2*i + 1] = vert_2;
     }
 
     // Pedimos memoria para arreglo auxiliar de lados
@@ -103,15 +103,22 @@ Grafo ConstruccionDelGrafo() {
     // Libero el arreglo auxiliar
     free(vertices_repetidos);
 
-    Vertice vecino, vert;
+    Vertice v1, v2;
+    u32 indice1, indice2;
 
     // Agrego los vecinos
     for (u32 i = 0; i < cant_lados; ++i) {
-        vert = G->vertices[BuscarVertice(G, lados[2 * i])];
-        vecino = G->vertices[BuscarVertice(G, lados[2 * i + 1])];
+        indice1 = BuscarVertice(G, lados[2*i]);
+        indice2 = BuscarVertice(G, lados[2*i + 1]);
 
-        AgregarVecino(vert, vecino);
-        AgregarVecino(vecino, vert);
+        v1 = G->vertices[indice1];
+        v2 = G->vertices[indice2];
+
+        v1->indices_vecinos[v1->pos_ultimo_vecino] = indice2;
+        ++v1->pos_ultimo_vecino;
+
+        v2->indices_vecinos[v2->pos_ultimo_vecino] = indice1;
+        ++v2->pos_ultimo_vecino;
     }
 
     // Libero el arreglo auxiliar de lados
@@ -136,13 +143,26 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
+    // Copio la estructura del grafo
     Grafo G2 = malloc(sizeof(GrafoSt));
     memcpy(G2, G, sizeof(GrafoSt));
-    G2->vertices = malloc(sizeof(G->vertices));
-    memcpy(G2->vertices, G->vertices, sizeof(u32) * G->cant_vertices);
+
+    // Copio todos los vertices
+    G2->vertices = malloc(sizeof(Vertice) * G->cant_vertices);
+    memcpy(G2->vertices, G->vertices, sizeof(Vertice) * G->cant_vertices);
+
+    for (u32 i = 0; i < G->cant_vertices; ++i) {
+        // Copio la estructura de vertice
+        G2->vertices[i] = malloc(sizeof(VerticeSt));
+        memcpy(G2->vertices[i], G->vertices[i], sizeof(VerticeSt));
+
+        // Copio el arreglo de índices de vecinos
+        G2->vertices[i]->indices_vecinos = malloc(sizeof(u32) * G->vertices[i]->grado);
+        memcpy(G2->vertices[i]->indices_vecinos, G->vertices[i]->indices_vecinos, sizeof(u32) * G->vertices[i]->grado);
+    }
+
     return G2;
 }
-
 
 int CompararU32(const void * a, const void * b) {
     u32 primero = *(u32*) a;
@@ -197,15 +217,19 @@ u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
         return (MAX_U32);
     }
 
-    return (G->vertices[i]->vecinos[j]->color_actual);
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+
+    return (G->vertices[ind]->color_actual);
 }
 
 u32 NombreJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    return G->vertices[i]->vecinos[j]->nombre;
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+    return G->vertices[ind]->nombre;
 }
 
 u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    return G->vertices[i]->vecinos[j]->grado;
+    u32 ind = G->vertices[i]->indices_vecinos[j];
+    return G->vertices[ind]->grado;
 }
 
 

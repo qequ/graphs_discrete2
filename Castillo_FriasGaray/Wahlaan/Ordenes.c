@@ -22,7 +22,7 @@ char OrdenWelshPowell(Grafo G) {
 }
 
 
-char SwitchVertices(Grafo G,u32 i,u32 j) {
+char SwitchVertices(Grafo G, u32 i, u32 j) {
     if (i >= G->cant_vertices || j >= G->cant_vertices) return 1;
 
     // Swap vertices
@@ -32,7 +32,7 @@ char SwitchVertices(Grafo G,u32 i,u32 j) {
     return 0;
 }
 
-char SwitchColores(Grafo G,u32 i,u32 j) {
+char SwitchColores(Grafo G, u32 i, u32 j) {
     if (i >= G->cant_colores || j >= G->cant_colores) return 1;
 
     for (u32 k = 0; k < G->cant_vertices; ++k) {
@@ -93,6 +93,3 @@ char RMBCchicogrande(Grafo G) {
     qsort(G->vertices, G->cant_vertices, sizeof(Vertice), comparar_cant_bloque_creciente);
     return 0;
 }
-
-
-// TODO: agregar test para ordenamientos

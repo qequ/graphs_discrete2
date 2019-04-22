@@ -39,7 +39,7 @@ u32 Greedy(Grafo G) {
         // Recorriendo todos los vecinos de X
         for (u32 j = 0; j < x->grado; j++) {
             // x e y son vecinos
-            Vertice y = x->vecinos[j];
+            Vertice y = G->vertices[x->indices_vecinos[j]];
 
             // Descartando posibles colores de x ya usados por vecinos
             if (y->coloreado) {
@@ -101,7 +101,7 @@ int Bipartito(Grafo G) {
 
             // Recorriendo los vecinos del vértice decolado
             for (u32 i = 0; i < p->grado; i++) {
-                vecino = p->vecinos[i];
+                vecino = G->vertices[p->indices_vecinos[i]];
 
                 if (!vecino->coloreado) {
                     encolar(q, vecino);
