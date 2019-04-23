@@ -1,10 +1,13 @@
 #include "Rii.h"
 
+/*
+Construye un nuevo vertice y devuelve un puntero al mismo.
+*/
+Vertice ConstruirVertice(u32 nombre, u32 grado, u32 indice) {
+    Vertice V = malloc(sizeof(struct VerticeSt));
+    if (V == NULL) return NULL;
 
-Vertice ConstruirVertice(u32 nombre, u32 grado)
-{
-    Vertice V = malloc(sizeof(VerticeSt));
-
+    // Inicializo la estructura
     V->inicializado = true;
     V->coloreado = false;
     V->nombre = nombre;
@@ -12,12 +15,19 @@ Vertice ConstruirVertice(u32 nombre, u32 grado)
     V->cant_bloque = 0;
     V->pos_ultimo_vecino = 0;
     V->grado = grado;
-    V->indices_vecinos = (u32*) malloc(sizeof(u32) * grado);
+    V->indice = indice;
+    V->vecinos = (Vertice*) malloc(sizeof(Vertice) * grado);
 
+    // Libero memoria si hay error
+    if (V->vecinos == NULL) {
+        free(V);
+        return NULL;
+    }
     return V;
 }
 
 void DestruirVertice(Vertice V) {
-    free(V->indices_vecinos);
+    // Libero la memoria
+    free(V->vecinos);
     free(V);
 }

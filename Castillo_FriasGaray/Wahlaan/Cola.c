@@ -3,7 +3,17 @@
 
 Cola crear_cola(u32 n) {
     Cola q = malloc(sizeof(cola_t));
+
+    // Error alocando
+    if (q == NULL) return NULL;
+
     q->elems = malloc(n * sizeof(Vertice));
+
+    // Error alocando, libero la memoria
+    if (q->elems == NULL) {
+        free(q);
+        return NULL;
+    }
     q->first = 0;
     q->size = 0;
     q->n = n;
@@ -27,6 +37,7 @@ u32 cola_vacia(Cola q) {
 }
 
 void destruir_cola(Cola q) {
+    // Libero la memoria alocada
     free(q->elems);
     free(q);
 }

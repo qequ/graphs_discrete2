@@ -89,16 +89,42 @@ Grafo ConstruccionDelGrafo() {
     // Se agregan los demás vértices sin repeticiones
     for (; i < (cant_lados * 2) - 1; ++i) {
         if (vertices_repetidos[i] != vertices_repetidos[i + 1]) {
-            // Cuando agrego un vértice ya se el grado
-            AgregarVertice(G, vertices_repetidos[i], cant_vecinos);
+            // Cuando agrego un vértice ya conozco el grado,
+            // construyo un nuevo vertice con su respectiva cantidad de vecinos
+            // y utilizando la cantidad de vertices del grafo como contador,
+            // a medida que voy creando mas vertices.
+            G->vertices[G->cant_vertices] = ConstruirVertice(vertices_repetidos[i], cant_vecinos, G->cant_vertices);
 
+            // Libero memoria si hay error
+            if (G->vertices[G->cant_vertices] == NULL){
+                printf("Error al intentar alocar memoria!\n");
+                free(lados);
+                free(vertices_repetidos);
+                DestruccionDelGrafo(G);
+                return NULL;
+            }
+            // Aumento el contador de vertices
+            ++G->cant_vertices;
+
+            // Actualizo delta (el mayor grado del grafo) si es necesario
             if (cant_vecinos > G->mayor_grado) G->mayor_grado = cant_vecinos;
-
+            // Reseteo la cantidad de vecinos
             cant_vecinos = 1;
         } else
             cant_vecinos++;
     }
-    AgregarVertice(G, vertices_repetidos[i], cant_vecinos);
+    // Repito lo anterior para el último:
+    // Construyo el último vertice.
+    G->vertices[G->cant_vertices] = ConstruirVertice(vertices_repetidos[i], cant_vecinos, G->cant_vertices);
+
+    if (G->vertices[G->cant_vertices] == NULL) {
+        printf("Error al intentar alocar memoria!\n");
+        free(lados);
+        free(vertices_repetidos);
+        DestruccionDelGrafo(G);
+        return NULL;
+    }
+    ++G->cant_vertices;
 
     // Libero el arreglo auxiliar
     free(vertices_repetidos);
@@ -114,10 +140,10 @@ Grafo ConstruccionDelGrafo() {
         v1 = G->vertices[indice1];
         v2 = G->vertices[indice2];
 
-        v1->indices_vecinos[v1->pos_ultimo_vecino] = indice2;
+        v1->vecinos[v1->pos_ultimo_vecino] = v2;
         ++v1->pos_ultimo_vecino;
 
-        v2->indices_vecinos[v2->pos_ultimo_vecino] = indice1;
+        v2->vecinos[v2->pos_ultimo_vecino] = v1;
         ++v2->pos_ultimo_vecino;
     }
 
@@ -143,23 +169,65 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
-    // Copio la estructura del grafo
+    // Pido memoria para un grafo
     Grafo G2 = malloc(sizeof(GrafoSt));
+    if (G2 == NULL) {
+        printf("Error al intentar alocar memoria!\n");
+        return NULL;
+    }
+    // Copio la estructura del grafo
     memcpy(G2, G, sizeof(GrafoSt));
 
-    // Copio todos los vertices
+    // Pido memoria para el arreglo de vertices
     G2->vertices = malloc(sizeof(Vertice) * G->cant_vertices);
+    if (G2->vertices == NULL) {
+        printf("Error al intentar alocar memoria!\n");
+        free(G2);
+        return NULL;
+    }
+    // Copio todos los vertices
     memcpy(G2->vertices, G->vertices, sizeof(Vertice) * G->cant_vertices);
 
     for (u32 i = 0; i < G->cant_vertices; ++i) {
-        // Copio la estructura de vertice
-        G2->vertices[i] = malloc(sizeof(VerticeSt));
-        memcpy(G2->vertices[i], G->vertices[i], sizeof(VerticeSt));
+        // Pido memoria para un nuevo vertice
+        G2->vertices[i] = malloc(sizeof(struct VerticeSt));
 
-        // Copio el arreglo de índices de vecinos
-        G2->vertices[i]->indices_vecinos = malloc(sizeof(u32) * G->vertices[i]->grado);
-        memcpy(G2->vertices[i]->indices_vecinos, G->vertices[i]->indices_vecinos, sizeof(u32) * G->vertices[i]->grado);
+        if (G2->vertices[i] == NULL) {
+            printf("Error al intentar alocar memoria!\n");
+            // Libero la memoria
+            for (u32 k = 0; k < i; ++k)
+                DestruirVertice(G2->vertices[k]);
+            free(G2->vertices);
+            free(G2);
+            return NULL;
+        }
+        // Copio la estructura de vertice
+        memcpy(G2->vertices[i], G->vertices[i], sizeof(struct VerticeSt));
+
+        // Pido memoria para el arreglo de vecinos
+        G2->vertices[i]->vecinos = malloc(sizeof(Vertice) * G->vertices[i]->grado);
+
+        if (G2->vertices[i]->vecinos == NULL) {
+            printf("Error al intentar alocar memoria!\n");
+            // Libero la memoria
+            for (u32 k = 0; k <= i; ++k)
+                DestruirVertice(G2->vertices[k]);
+            free(G2->vertices);
+            free(G2);
+            return NULL;
+        }
+        // Copio el arreglo de punteros a vecinos
+        memcpy(G2->vertices[i]->vecinos, G->vertices[i]->vecinos, sizeof(Vertice) * G->vertices[i]->grado);
+
     }
+    // En este punto, todos los vecinos apuntan a los vertices de G,
+    // Cambiemos esos punteros
+    for (u32 i = 0; i < G->cant_vertices; ++i)
+        for (u32 j = 0; j < G2->vertices[i]->grado; ++j) {
+            Vertice vecino = G->vertices[i]->vecinos[j];
+
+            G2->vertices[i]->vecinos[j] = G2->vertices[vecino->indice];
+        }
 
     return G2;
 }
@@ -217,31 +285,21 @@ u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j) {
         return (MAX_U32);
     }
 
-    u32 ind = G->vertices[i]->indices_vecinos[j];
-
-    return (G->vertices[ind]->color_actual);
+    return (G->vertices[i]->vecinos[j]->color_actual);
 }
 
 u32 NombreJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    u32 ind = G->vertices[i]->indices_vecinos[j];
-    return G->vertices[ind]->nombre;
+    return G->vertices[i]->vecinos[j]->nombre;
 }
 
 u32 GradoJotaesimoVecino(Grafo G, u32 i, u32 j) {
-    u32 ind = G->vertices[i]->indices_vecinos[j];
-    return G->vertices[ind]->grado;
+    return G->vertices[i]->vecinos[j]->grado;
 }
 
-
-u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado) {
-    u32 i_vertice;
-
-    G->vertices[G->cant_vertices] = ConstruirVertice(nombre_vertice, grado);
-    i_vertice = G->cant_vertices;
-    ++G->cant_vertices;
-    return i_vertice;
-}
-
+/*
+Busqueda binaria en arreglo de vertices del grafo
+Asume que el mismo está ordenado.
+*/
 int BuscarVertice(Grafo G, u32 nombre_vert) {
     int bajo;
     int alto;

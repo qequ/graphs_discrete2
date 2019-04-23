@@ -28,18 +28,19 @@ u32 Greedy(Grafo G) {
     bool colores_usados[G->mayor_grado + 1];
     memset(colores_usados, false, (G->mayor_grado + 1) * sizeof(bool));
 
+    // Coloreo el primer vértice con 0
     colorear(G->vertices[0], 0);
     u32 max_color = 0;
-    u32 max_color_usado = 0;
 
     for (u32 i = 1; i < G->cant_vertices; i++) {
         Vertice x = G->vertices[i];
         u32 color_x = 0;
+        u32 max_color_usado = 0;
 
         // Recorriendo todos los vecinos de X
         for (u32 j = 0; j < x->grado; j++) {
             // x e y son vecinos
-            Vertice y = G->vertices[x->indices_vecinos[j]];
+            Vertice y = x->vecinos[j];
 
             // Descartando posibles colores de x ya usados por vecinos
             if (y->coloreado) {
@@ -71,7 +72,6 @@ u32 Greedy(Grafo G) {
     return (max_color + 1);
 }
 
-
 int Bipartito(Grafo G) {
     decolorear(G);
 
@@ -85,14 +85,19 @@ int Bipartito(Grafo G) {
         x = G->vertices[j];
 
         // Si el vértice ya está coloreado no nos importa
-        if (x->coloreado) {
+        if (x->coloreado)
             continue;
-        }
 
         // Los colores van a ser 0 y 1
         colorear(x, 0);
         // Cola útil para BFS
         q = crear_cola(G->cant_vertices);
+
+        if (q == NULL) {
+            printf("Error al intentar alocar memoria!\n");
+            return NULL;
+        }
+
         encolar(q, x);
 
         while (!cola_vacia(q)) {
@@ -101,18 +106,16 @@ int Bipartito(Grafo G) {
 
             // Recorriendo los vecinos del vértice decolado
             for (u32 i = 0; i < p->grado; i++) {
-                vecino = G->vertices[p->indices_vecinos[i]];
+                vecino = p->vecinos[i];
 
                 if (!vecino->coloreado) {
                     encolar(q, vecino);
 
                     // Coloreamos al vecino con el color opuesto a p
-                    if (p->color_actual == 0) {
+                    if (p->color_actual == 0)
                         colorear(vecino, 1);
-                    }
-                    else {
+                    else
                         colorear(vecino, 0);
-                    }
                 }
                 else if (vecino->color_actual == p->color_actual) {
                     // El vértice p y su vecino tienen el mismo color

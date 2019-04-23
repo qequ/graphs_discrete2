@@ -1,4 +1,4 @@
-typedef struct {
+struct VerticeSt {
     bool                inicializado;
     bool                coloreado;
     u32                 nombre;
@@ -6,14 +6,16 @@ typedef struct {
     u32                 grado;
     u32                 cant_bloque;
     u32                 pos_ultimo_vecino;
+    // Posición en el array de vértices del grafo
+    u32                 indice;
 
-    // Arreglo de indices a vértices vecinos
-    u32*                indices_vecinos;
-} VerticeSt;
+    // Arreglo de punteros a vértices vecinos
+    struct VerticeSt**  vecinos;
+};
 
-typedef VerticeSt * Vertice;
+typedef struct VerticeSt * Vertice;
 
 
-Vertice ConstruirVertice(u32 nombre, u32 grado);
+Vertice ConstruirVertice(u32 nombre, u32 grado, u32 indice);
 
 void DestruirVertice(Vertice V);

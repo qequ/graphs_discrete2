@@ -50,8 +50,6 @@ u32 NumeroDeLados(Grafo G);
 u32 NumeroDeColores(Grafo G);
 
 
-Vertice ConstruirVertice(u32 nombre, u32 grado);
-
 void DestruirVertice(Vertice V);
 
 u32 NombreDelVertice(Grafo G, u32 i);
@@ -63,8 +61,6 @@ u32 GradoDelVertice(Grafo G, u32 i);
 u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j);
 
 u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j);
-
-u32 AgregarVertice(Grafo G, u32 nombre_vertice, u32 grado);
 
 int CompararU32(const void * a, const void * b);
 
@@ -93,5 +89,8 @@ char RMBCchicogrande(Grafo G);
 u32 Greedy(Grafo G);
 
 int Bipartito(Grafo G);
+
+
+void ActualizarIndicesDeVertices(Grafo G);
 
 #endif
