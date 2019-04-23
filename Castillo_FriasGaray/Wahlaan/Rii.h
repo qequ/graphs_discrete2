@@ -38,35 +38,6 @@ typedef uint32_t u32;
 #include "Cola.h"
 
 
-// Funciones para extraer información de los grafos
-
-/* Devuelve la cantidad de vértices de un grafo G */
-u32 NumeroDeVertices(Grafo G);
-
-/* Devuelve la cantidad de lados de un grafo G */
-u32 NumeroDeLados(Grafo G);
-
-/* Devuelve la cantidad de colores presentes en un grafo G */
-u32 NumeroDeColores(Grafo G);
-
-
-void DestruirVertice(Vertice V);
-
-u32 NombreDelVertice(Grafo G, u32 i);
-
-u32 ColorDelVertice(Grafo G, u32 i);
-
-u32 GradoDelVertice(Grafo G, u32 i);
-
-u32 ColorJotaesimoVecino(Grafo G, u32 i,u32 j);
-
-u32 NombreJotaesimoVecino(Grafo G, u32 i,u32 j);
-
-int CompararU32(const void * a, const void * b);
-
-int BuscarVertice(Grafo G, u32 nombre_vert);
-
-
 /* Funciones de ordenación*/
 
 char OrdenNatural(Grafo G);

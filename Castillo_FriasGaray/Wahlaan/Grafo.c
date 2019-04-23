@@ -14,16 +14,15 @@ Grafo ConstruccionDelGrafo() {
             ;
 
     if (c != 'p'){
-        printf("Formato incorrecto!\n");
+        printf("Error en primera linea sin comentario\n");
         return NULL;
     }
 
     // Ya tenemos la p, buscamos una línea de la forma: `p edge x y`
     if(scanf(" edge %u %u\n", &cant_vertices, &cant_lados) <= 0){
-        printf("Formato incorrecto!\n");
+        printf("Error en primera linea sin comentario\n");
         return NULL;
     }
-    printf("Cantidad de vertices: %u\nCantidad de lados: %u\n", cant_vertices, cant_lados);
 
     // Pedimos memoria para guardar la estructura de grafo.
     // Calloc rellena con ceros la estructura.
@@ -51,7 +50,7 @@ Grafo ConstruccionDelGrafo() {
     for (u32 i = 0; i < cant_lados; ++i) {
         // Leemos líneas de la forma: `e vertice1 vertice2`
         if (scanf("e %u %u\n", &vert_1, &vert_2) <= 0) {
-            printf("Formato incorrecto!\n");
+            printf("Error de lectura en lado %u\n", i+1);
             free(vertices_repetidos);
             free(G->vertices);
             free(G);
@@ -126,6 +125,15 @@ Grafo ConstruccionDelGrafo() {
     }
     ++G->cant_vertices;
 
+    // Chequeo que tenga la cantidad correcta de vertices
+    if (G->cant_vertices != cant_vertices) {
+        printf("Cantidad de vertices leidos no es la declarada\n");
+        free(lados);
+        free(vertices_repetidos);
+        DestruccionDelGrafo(G);
+        return NULL;
+    }
+
     // Libero el arreglo auxiliar
     free(vertices_repetidos);
 
@@ -134,28 +142,27 @@ Grafo ConstruccionDelGrafo() {
 
     // Agrego los vecinos
     for (u32 i = 0; i < cant_lados; ++i) {
+        // Busco de a pares de vertices
         indice1 = BuscarVertice(G, lados[2*i]);
         indice2 = BuscarVertice(G, lados[2*i + 1]);
 
         v1 = G->vertices[indice1];
         v2 = G->vertices[indice2];
 
+        // Agrego como vecinos a los respectivos vertices,
+        // y actualizo la ultima posicion de los respectivos
+        // arreglos de vecinos.
         v1->vecinos[v1->pos_ultimo_vecino] = v2;
         ++v1->pos_ultimo_vecino;
-
         v2->vecinos[v2->pos_ultimo_vecino] = v1;
         ++v2->pos_ultimo_vecino;
     }
-
     // Libero el arreglo auxiliar de lados
     free(lados);
-
+    // Agrego la cantidad de lados al grafo
     G->cant_lados = cant_lados;
-
     // Coloreo G usando Greedy
-    printf("Coloreando con Greedy...\n");
     G->cant_colores = Greedy(G);
-    printf("Coloreado con %u colores\n", G->cant_colores);
     return G;
 }
 
@@ -169,7 +176,7 @@ void DestruccionDelGrafo(Grafo G) {
 }
 
 Grafo CopiarGrafo(Grafo G) {
-    // Pido memoria para un grafo
+    // Pido memoria para un nuevo grafo
     Grafo G2 = malloc(sizeof(GrafoSt));
     if (G2 == NULL) {
         printf("Error al intentar alocar memoria!\n");
@@ -221,14 +228,16 @@ Grafo CopiarGrafo(Grafo G) {
 
     }
     // En este punto, todos los vecinos apuntan a los vertices de G,
-    // Cambiemos esos punteros
-    for (u32 i = 0; i < G->cant_vertices; ++i)
+    // cambiemos esos punteros
+    for (u32 i = 0; i < G->cant_vertices; ++i) {
         for (u32 j = 0; j < G2->vertices[i]->grado; ++j) {
             Vertice vecino = G->vertices[i]->vecinos[j];
 
             G2->vertices[i]->vecinos[j] = G2->vertices[vecino->indice];
         }
-
+    }
+    // Ahora que la copia es totalmente independiente del grafo original,
+    // devuelvo un puntero a ella
     return G2;
 }
 
@@ -237,6 +246,7 @@ int CompararU32(const void * a, const void * b) {
     u32 segundo = *(u32*) b;
     return primero >= segundo;
 }
+
 
 // ----------Funciones para extraer info de los grafos----//
 
